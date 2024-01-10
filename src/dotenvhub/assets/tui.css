@@ -1,0 +1,34 @@
+#DotEnvHub {
+    background: aquamarine;
+}
+
+#header {
+    background: darkblue;
+    height: 5;
+    dock:top;
+}
+
+#footer {
+    background: darkblue;
+    height: 3;
+    dock:bottom;
+}
+
+
+#filelist {
+    width: 30%;
+    height: 100%;
+    background: red;
+}
+
+#textarea {
+    width: 1fr;
+    height: 50%;
+    background: red;
+}
+
+#container{
+    height: 1fr;
+    width: 1fr;
+    column-span: 8;
+}
