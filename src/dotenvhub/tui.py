@@ -3,13 +3,9 @@ from textual.containers import Container, Horizontal, VerticalScroll
 from textual.screen import Screen
 from textual.widgets import Placeholder
 
-TEXT = """\
-def hello(name):
-    print("hello" + name)
-
-def goodbye(name):
-    print("goodbye" + name)
-"""
+# Fragen
+# Do Updates happen in Displayed UI based on File System Changes
+# Shell Auto Detection
 
 
 class Header(Placeholder):
