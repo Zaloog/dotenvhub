@@ -21,8 +21,6 @@ def parse_args(args):
         action="version",
         version=f"dotenvhub {__version__}",
     )
-    # parser.add_argument(
-    # dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
     parser.add_argument(
         "-v",
         "--verbose",

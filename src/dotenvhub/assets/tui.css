@@ -1,34 +1,58 @@
-#DotEnvHub {
-    background: aquamarine;
+#app-grid {
+    layout: grid;
+    grid-size: 2;  /* two columns */
+    grid-columns: 1fr;
+    grid-rows: 1fr;
 }
 
-#header {
-    background: darkblue;
-    height: 5;
-    dock:top;
+#left-pane > Static {
+    background: $boost;
+    color: auto;
+    margin-bottom: 1;
+    padding: 1;
 }
 
-#footer {
-    background: darkblue;
-    height: 3;
-    dock:bottom;
-}
-
-
-#filelist {
-    width: 30%;
+#left-pane {
+    width: 100%;
     height: 100%;
-    background: red;
+    row-span: 2;
+    background: $panel;
+    border: dodgerblue;
 }
 
-#textarea {
-    width: 1fr;
-    height: 50%;
-    background: red;
+#file-preview {
+    height: 100%;
+    background: $panel;
+    border: mediumvioletred;
 }
 
-#container{
-    height: 1fr;
+#file-preview > TextArea {
+    width: auto;
+    height: 100%;
+    margin-right: 1;
+    background: $boost;
+}
+
+#interaction {
+    height: 100%;
+    layout: grid;
+    grid-size: 3;
+    grid-columns: 1fr;
+    grid-rows: 1fr;
+    grid-gutter: 2;
+    background: $panel;
+    border: greenyellow;
+}
+
+#bottom-right-final {
+    height: auto;
     width: 1fr;
-    column-span: 8;
+    column-span: 3;
+}
+
+#interaction > Button {
+    height: 100%;
+    width: 1fr;
+    margin: 2 2 2 2;
+    background: rgb(197, 138, 27);
 }
