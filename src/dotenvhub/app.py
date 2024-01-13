@@ -22,7 +22,7 @@ References:
 
 import sys
 
-from dotenvhub import cli_parser, tui
+from dotenvhub import cli_parser, config, tui
 
 __author__ = "Zaloog"
 __copyright__ = "Zaloog"
@@ -69,6 +69,10 @@ def main(args):
           (for example  ``["--verbose", "42"]``).
     """
     args = cli_parser.parse_args(args)
+
+    if not config.check_config_exists():
+        config.create_init_config()
+
     tui.myapp.run()
 
 

@@ -5,19 +5,47 @@
     grid-rows: 1fr;
 }
 
-#left-pane > Static {
+#file-selector > Static {
     background: $boost;
     color: auto;
     margin-bottom: 1;
     padding: 1;
 }
 
-#left-pane {
+#file-selector {
     width: 100%;
     height: 100%;
     row-span: 2;
     background: $panel;
     border: dodgerblue;
+}
+
+#file-selector > #Colab {
+    height: auto;
+    background: $boost;
+    keyline:heavy green;
+}
+
+ListView {
+    height: auto;
+    padding-bottom: 1;
+
+}
+
+ListItem {
+    height: auto;
+    padding: 1;
+
+}
+
+CollapsibleTitle {
+    width: 1fr;
+    height: 3;
+    /* background: $boost; */
+    background: $boost;
+    content-align: center middle;
+
+
 }
 
 #file-preview {
