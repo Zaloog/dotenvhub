@@ -5,13 +5,6 @@
     grid-rows: 1fr;
 }
 
-#file-selector > Static {
-    background: $boost;
-    color: auto;
-    margin-bottom: 1;
-    padding: 1;
-}
-
 #file-selector {
     width: 100%;
     height: 100%;
@@ -20,46 +13,34 @@
     border: dodgerblue;
 }
 
-#file-selector > #Colab {
-    height: auto;
-    background: $boost;
-    keyline:heavy green;
-}
-
 ListView {
     height: auto;
     padding-bottom: 1;
-
 }
 
 ListItem {
     height: auto;
     padding: 1;
-
 }
 
 CollapsibleTitle {
     width: 1fr;
     height: 3;
-    /* background: $boost; */
     background: $boost;
     content-align: center middle;
-
-
 }
 
-#file-preview {
-    height: 100%;
+
+
+#file-preview  {
+    width: auto;
     background: $panel;
     border: mediumvioletred;
-}
-
-#file-preview > TextArea {
-    width: auto;
     height: 100%;
-    margin-right: 1;
+    margin-right: 0;
     background: $boost;
 }
+
 
 #interaction {
     height: 100%;
@@ -83,4 +64,14 @@ CollapsibleTitle {
     width: 1fr;
     margin: 2 2 2 2;
     background: rgb(197, 138, 27);
+}
+
+Header {
+    height: 5%;
+    background: $panel;
+}
+
+Footer {
+    height: 5%;
+    background: $panel;
 }
