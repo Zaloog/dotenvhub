@@ -30,6 +30,12 @@ def parse_args(args):
         const=logging.INFO,
     )
     parser.add_argument(
+        "-s",
+        "--scan",
+        help="scan recursively for .env-files",
+        action="store_true",
+    )
+    parser.add_argument(
         "-vv",
         "--very-verbose",
         dest="loglevel",

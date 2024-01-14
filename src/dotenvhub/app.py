@@ -68,12 +68,17 @@ def main(args):
       args (List[str]): command line parameters as list of strings
           (for example  ``["--verbose", "42"]``).
     """
-    args = cli_parser.parse_args(args)
+    parsed_args = cli_parser.parse_args(args)
 
     if not config.check_config_exists():
         config.create_init_config()
+        return
 
-    tui.myapp.run()
+    if not args:
+        tui.myapp.run()
+
+    if parsed_args:
+        ...
 
 
 def run():

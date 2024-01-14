@@ -14,3 +14,10 @@ DATA_PATH = Path(
 
 CONFIG_FILE_PATH = CONFIG_PATH / CONFIG_FILE_NAME
 ENV_FILE_DIR_PATH = DATA_PATH / ENV_FILE_DIR_NAME
+
+SHELLS = [
+    "powershell",
+    "cmd",
+    "bash",
+    "zsh",
+]

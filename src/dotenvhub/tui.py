@@ -14,10 +14,13 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
+    RadioButton,
+    RadioSet,
     TextArea,
 )
 
-from .constants import ENV_FILE_DIR_PATH
+from .config import cfg
+from .constants import ENV_FILE_DIR_PATH, SHELLS
 from .utils import copy_path_to_clipboard, create_copy_in_cwd, get_env_content
 
 # Fragen
@@ -67,11 +70,27 @@ class FilePreviewer(TextArea):
     pass
 
 
+class ShellSelector(Container):
+    def compose(self):
+        with Collapsible(title=cfg.shell, id="shell-select"):
+            with VerticalScroll():
+                yield RadioSet(
+                    *[RadioButton(shell, id=f"radio-{shell}") for shell in SHELLS]
+                )
+
+
 class InteractionPanel(Container):
     def compose(self):
-        yield Button.warning("Create Shell String", id="shell_export_btn")
-        yield Button.warning("Export File to current dir", id="export_btn")
-        yield Button.warning("Copy Path to Clipboard", id="clipboard_path_btn")
+        yield Button.warning(
+            "Create Shell String", id="shell_export_btn", disabled=True
+        )
+        yield Button.warning(
+            "Export File to current dir", id="export_btn", disabled=True
+        )
+        yield Button.warning(
+            "Copy Path to Clipboard", id="clipboard_path_btn", disabled=True
+        )
+        yield ShellSelector()
         yield Label("export filename")
         yield Input(
             value=".env", placeholder="env file name for export", id="export-env-name"
@@ -96,7 +115,6 @@ class DotEnvHub(App):
             fp = Horizontal(id="file-preview")
             fp.border_title = "No Env File Selected"
             with fp:
-                # Add File Name Display
                 tp = FilePreviewer(id="text-preview")
                 yield tp
 
@@ -105,22 +123,34 @@ class DotEnvHub(App):
     @on(ListView.Selected)
     def preview_file(self, event: ListView.Selected):
         self.file_to_show = event.list_view.highlighted_child.id
-        self.query_one("#file-preview").border_title = self.file_to_show
-
-        for views in self.query(ListView):
-            if views.highlighted_child:
-                if views.highlighted_child.id != self.file_to_show:
-                    views.index = None
+        self.query_one("#file-preview").border_title = ""
 
         if event.list_view.id:
             folder = Path(event.list_view.id)
             self.file_to_show_path = (
                 ENV_FILE_DIR_PATH / folder / Path(self.file_to_show)
             )
+            self.query_one(
+                "#file-preview"
+            ).border_title = f"{folder} / {self.file_to_show}"
         else:
             self.file_to_show_path = ENV_FILE_DIR_PATH / Path(self.file_to_show)
+            self.query_one("#file-preview").border_title = self.file_to_show
 
         log(self.file_to_show_path)
+        log(cfg.config["settings"]["Shell"])
+
+    @on(ListView.Selected)
+    def reset_highlights(self, event: ListView.Selected):
+        for views in self.query(ListView):
+            if views.highlighted_child:
+                if views.highlighted_child.id != event.list_view.highlighted_child.id:
+                    views.index = None
+
+    @on(ListView.Selected)
+    def enable_buttons(self):
+        for btn in self.query(Button):
+            btn.disabled = False
 
     @on(ListView.Selected)
     def update_preview_text(self):

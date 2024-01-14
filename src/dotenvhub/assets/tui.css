@@ -56,7 +56,7 @@ CollapsibleTitle {
 #export-env-name {
     height: auto;
     width: 1fr;
-    column-span: 3;
+    column-span: 1;
 }
 
 #interaction > Button {
