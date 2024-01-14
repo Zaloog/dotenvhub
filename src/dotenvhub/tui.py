@@ -93,22 +93,33 @@ class DotEnvHub(App):
             with VerticalScroll(id="file-selector"):
                 yield EnvFileSelector()
 
-            with Horizontal(id="file-preview"):
+            fp = Horizontal(id="file-preview")
+            fp.border_title = "No Env File Selected"
+            with fp:
                 # Add File Name Display
-                fp = FilePreviewer(id="text-preview")
-                fp.border_title = self.file_to_show_path
-                yield fp
+                tp = FilePreviewer(id="text-preview")
+                yield tp
 
             yield InteractionPanel(id="interaction")
 
     @on(ListView.Selected)
     def preview_file(self, event: ListView.Selected):
-        self.file_to_show = Path(event.list_view.highlighted_child.id)
+        self.file_to_show = event.list_view.highlighted_child.id
+        self.query_one("#file-preview").border_title = self.file_to_show
+
+        for views in self.query(ListView):
+            if views.highlighted_child:
+                if views.highlighted_child.id != self.file_to_show:
+                    views.index = None
+
         if event.list_view.id:
             folder = Path(event.list_view.id)
-            self.file_to_show_path = ENV_FILE_DIR_PATH / folder / self.file_to_show
+            self.file_to_show_path = (
+                ENV_FILE_DIR_PATH / folder / Path(self.file_to_show)
+            )
         else:
-            self.file_to_show_path = ENV_FILE_DIR_PATH / self.file_to_show
+            self.file_to_show_path = ENV_FILE_DIR_PATH / Path(self.file_to_show)
+
         log(self.file_to_show_path)
 
     @on(ListView.Selected)

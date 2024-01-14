@@ -35,7 +35,7 @@ CollapsibleTitle {
 #file-preview  {
     width: auto;
     background: $panel;
-    border: mediumvioletred;
+    border: red;
     height: 100%;
     margin-right: 0;
     background: $boost;
