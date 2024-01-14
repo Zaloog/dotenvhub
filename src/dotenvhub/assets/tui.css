@@ -1,3 +1,4 @@
+
 #app-grid {
     layout: grid;
     grid-size: 2;  /* two columns */
@@ -74,4 +75,9 @@ Header {
 Footer {
     height: 5%;
     background: $panel;
+}
+
+RadioSet > RadioButton {
+    width: 1fr;
+    height: auto;
 }

@@ -1,6 +1,8 @@
 # DotEnvHub Tasks
 
 ## .Env-Preview Area Container
+- Title
+
 ## .Env Selector Container
 - VerticalScroll: Container
   - ListView
@@ -17,6 +19,6 @@
   - HintField: Red if file with same name is already present
 
 ## Config File
-- Filestructure for Selector Container needed?
+- current Shell
 
 - Border Text for Sections

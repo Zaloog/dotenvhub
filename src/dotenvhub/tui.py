@@ -21,7 +21,12 @@ from textual.widgets import (
 
 from .config import cfg
 from .constants import ENV_FILE_DIR_PATH, SHELLS
-from .utils import copy_path_to_clipboard, create_copy_in_cwd, get_env_content
+from .utils import (
+    copy_path_to_clipboard,
+    create_copy_in_cwd,
+    create_shell_export_str,
+    get_env_content,
+)
 
 # Fragen
 # Do Updates happen in Displayed UI based on File System Changes
@@ -67,15 +72,24 @@ class EnvFileSelector(VerticalScroll):
 
 
 class FilePreviewer(TextArea):
-    pass
+    ...
 
 
 class ShellSelector(Container):
-    def compose(self):
-        with Collapsible(title=cfg.shell, id="shell-select"):
+    def compose(self) -> ComposeResult:
+        with Collapsible(
+            title=cfg.shell, id="shell-select", collapsed_symbol="", expanded_symbol=""
+        ):
             with VerticalScroll():
                 yield RadioSet(
-                    *[RadioButton(shell, id=f"radio-{shell}") for shell in SHELLS]
+                    *[
+                        RadioButton(
+                            shell,
+                            id=f"radio-{shell}",
+                            value=True if shell == cfg.shell else False,
+                        )
+                        for shell in SHELLS
+                    ]
                 )
 
 
@@ -103,22 +117,26 @@ class DotEnvHub(App):
     file_to_show = var("")
     file_to_show_path = var("")
     text_to_display = var("")
+    shell_in_use = var(cfg.shell)
 
     def compose(self) -> ComposeResult:
         yield Header()
         yield Footer()
 
         with Container(id="app-grid"):
-            with VerticalScroll(id="file-selector"):
+            file_selector = VerticalScroll(id="file-selector")
+            file_selector.border_title = "Select your .env File"
+            with file_selector:
                 yield EnvFileSelector()
 
-            fp = Horizontal(id="file-preview")
-            fp.border_title = "No Env File Selected"
-            with fp:
-                tp = FilePreviewer(id="text-preview")
-                yield tp
+            file_previewer = Horizontal(id="file-preview")
+            file_previewer.border_title = "No Env File Selected"
+            with file_previewer:
+                yield FilePreviewer(id="text-preview")
 
-            yield InteractionPanel(id="interaction")
+            file_interaction = InteractionPanel(id="interaction")
+            file_interaction.border_title = "What do you want to do?"
+            yield file_interaction
 
     @on(ListView.Selected)
     def preview_file(self, event: ListView.Selected):
@@ -158,6 +176,7 @@ class DotEnvHub(App):
 
         text_widget = self.query_one(TextArea)
         text_widget.text = self.text_to_display
+        text_widget.action_cursor_page_down()
         text_widget.disabled = True
         log(self.text_to_display)
 
@@ -170,7 +189,20 @@ class DotEnvHub(App):
     def export_env_file(self):
         export_filename = self.query_one(Input).value
         create_copy_in_cwd(filename=export_filename, filepath=self.file_to_show_path)
-        log("created Export file")
+
+    @on(Button.Pressed, "#shell_export_btn")
+    def export_env_str(self):
+        create_shell_export_str(shell=cfg.shell, env_content=self.text_to_display)
+
+    @on(RadioSet.Changed)
+    def set_shell(self, event: RadioSet.Changed):
+        selected_shell = event.pressed.id.split("-")[1]
+        self.shell_in_use = selected_shell
+        cfg.shell = self.shell_in_use
+
+        shell_colabsible = self.query_one("#shell-select")
+        shell_colabsible.title = self.shell_in_use
+        shell_colabsible.collapsed = True
 
 
 myapp = DotEnvHub()
