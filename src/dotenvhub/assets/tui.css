@@ -53,7 +53,7 @@ CollapsibleTitle {
     border: greenyellow;
 }
 
-#bottom-right-final {
+#export-env-name {
     height: auto;
     width: 1fr;
     column-span: 3;
