@@ -38,15 +38,23 @@ class EnvFileSelector(VerticalScroll):
         for dirpath, filenames in self.dir_paths.items():
             if dirpath == Path("."):
                 yield ListView(
-                    *[ListItem(Label(file), id=file) for file in filenames],
+                    *[
+                        ListItem(Label(f":page_facing_up: {file}"), id=file)
+                        for file in filenames
+                    ],
                 )
             else:
                 yield Collapsible(
                     ListView(
-                        *[ListItem(Label(file), id=file) for file in filenames],
+                        *[
+                            ListItem(Label(f":page_facing_up: {file}"), id=file)
+                            for file in filenames
+                        ],
                         id=str(dirpath),
                     ),
-                    title=dirpath,
+                    title=f"{dirpath}",
+                    collapsed_symbol=":file_folder:",
+                    expanded_symbol=":open_file_folder:",
                 )
 
 
@@ -69,6 +77,7 @@ class DotEnvHub(App):
                 yield EnvFileSelector()
 
             with Horizontal(id="file-preview"):
+                # Add File Name Display
                 yield FilePreviewer(id="text-preview")
 
             with Container(id="interaction"):

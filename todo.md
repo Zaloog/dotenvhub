@@ -18,3 +18,5 @@
 
 ## Config File
 - Filestructure for Selector Container needed?
+
+- Border Text for Sections
