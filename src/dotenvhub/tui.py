@@ -117,7 +117,6 @@ class DotEnvHub(App):
     file_to_show = var("")
     file_to_show_path = var("")
     text_to_display = var("")
-    shell_in_use = var(cfg.shell)
 
     def compose(self) -> ComposeResult:
         yield Header()
