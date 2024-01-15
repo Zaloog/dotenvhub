@@ -3,7 +3,7 @@ from pathlib import Path
 
 from textual import log, on
 from textual.app import App, ComposeResult
-from textual.containers import Container, Horizontal, VerticalScroll
+from textual.containers import Container, Horizontal, Vertical, VerticalScroll
 from textual.reactive import var
 from textual.widgets import (
     Button,
@@ -95,19 +95,40 @@ class ShellSelector(Container):
 
 class InteractionPanel(Container):
     def compose(self):
-        yield Button.warning(
-            "Create Shell String", id="shell_export_btn", disabled=True
+        yield Button(
+            "Create Shell String",
+            id="btn_shell_export",
+            disabled=True,
+            variant="primary",
         )
-        yield Button.warning(
-            "Export File to current dir", id="export_btn", disabled=True
+        yield Button(
+            "Export File to current dir",
+            id="btn_export",
+            disabled=True,
+            variant="primary",
         )
-        yield Button.warning(
-            "Copy Path to Clipboard", id="clipboard_path_btn", disabled=True
+        yield Button(
+            "Copy Path to Clipboard",
+            id="btn_clipboard_path",
+            disabled=True,
+            variant="primary",
         )
-        yield ShellSelector()
-        yield Label("export filename")
-        yield Input(
-            value=".env", placeholder="env file name for export", id="export-env-name"
+        with Vertical(id="interaction-shell-select"):
+            yield Label("Select your Shell")
+            yield ShellSelector()
+        with Vertical(id="interaction-export-name"):
+            yield Label("Export filename")
+            yield Input(
+                value=".env",
+                placeholder="env file name for export",
+                id="export-env-name",
+            )
+        yield Button("New Env File", id="btn-new-file", variant="success")
+        yield Button(
+            "Edit Env File", id="btn-edit-file", disabled=True, variant="warning"
+        )
+        yield Button(
+            "Save Env File", id="btn-save-file", disabled=True, variant="success"
         )
 
 
@@ -154,9 +175,6 @@ class DotEnvHub(App):
             self.file_to_show_path = ENV_FILE_DIR_PATH / Path(self.file_to_show)
             self.query_one("#file-preview").border_title = self.file_to_show
 
-        log(self.file_to_show_path)
-        log(cfg.config["settings"]["Shell"])
-
     @on(ListView.Selected)
     def reset_highlights(self, event: ListView.Selected):
         for views in self.query(ListView):
@@ -179,17 +197,17 @@ class DotEnvHub(App):
         text_widget.disabled = True
         log(self.text_to_display)
 
-    @on(Button.Pressed, "#clipboard_path_btn")
+    @on(Button.Pressed, "#btn_clipboard_path")
     def copy_env_path(self):
         copy_path_to_clipboard(path=self.file_to_show_path)
         log("copied file path to clipboard")
 
-    @on(Button.Pressed, "#export_btn")
+    @on(Button.Pressed, "#btn_export")
     def export_env_file(self):
         export_filename = self.query_one(Input).value
         create_copy_in_cwd(filename=export_filename, filepath=self.file_to_show_path)
 
-    @on(Button.Pressed, "#shell_export_btn")
+    @on(Button.Pressed, "#btn_shell_export")
     def export_env_str(self):
         create_shell_export_str(shell=cfg.shell, env_content=self.text_to_display)
 

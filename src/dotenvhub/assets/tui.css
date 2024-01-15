@@ -1,4 +1,4 @@
-
+/* General */
 #app-grid {
     layout: grid;
     grid-size: 2;  /* two columns */
@@ -6,6 +6,8 @@
     grid-rows: 1fr;
 }
 
+/* ###############################################  */
+/* File Selector */
 #file-selector {
     width: 100%;
     height: 100%;
@@ -23,16 +25,21 @@ ListItem {
     height: auto;
     padding: 1;
 }
+Collapsible{
+    border: $panel thick ;
+    background:$panel;
+
+}
 
 CollapsibleTitle {
     width: 1fr;
     height: 3;
     background: $boost;
-    content-align: center middle;
+    content-align: left middle;
 }
 
-
-
+/* ###############################################  */
+/* Env File Preview */
 #file-preview  {
     width: auto;
     background: $panel;
@@ -41,32 +48,61 @@ CollapsibleTitle {
     margin-right: 0;
     background: $boost;
 }
-
-
+/* ###############################################  */
+/* Interaction General */
 #interaction {
     height: 100%;
     layout: grid;
     grid-size: 3;
     grid-columns: 1fr;
     grid-rows: 1fr;
-    grid-gutter: 2;
+    /* grid-gutter: 3; */
     background: $panel;
     border: greenyellow;
 }
 
-#export-env-name {
-    height: auto;
+/* Interaction 1st Row Buttons */
+#interaction > Button {
+    height: 1fr;
+    width: 1fr;
+    margin: 1 1 1 2;
+}
+
+/* Interaction Shell Selector */
+#interaction-shell-select {
     width: 1fr;
     column-span: 1;
+    margin: 0 0 0 2 ;
 }
-
-#interaction > Button {
-    height: 100%;
+#interaction-shell-select > Label{
     width: 1fr;
-    margin: 2 2 2 2;
-    background: rgb(197, 138, 27);
+    column-span: 1;
+    content-align:center middle;
+    margin: 0 0 1 0;
+}
+/* Interaction Export Name */
+#interaction-export-name {
+    width: 1fr;
+    column-span: 2;
+    margin: 0 1 0 1 ;
+}
+#interaction-export-name > Label{
+    width: 1fr;
+    column-span: 2;
+    content-align:center middle;
+    margin: 0 0 1 0;
+}
+#interaction-export-name > Input{
+    height: 50%;
+    content-align:center middle ;
 }
 
+
+RadioSet > RadioButton {
+    width: 1fr;
+    height: auto;
+}
+/* Header Footer */
 Header {
     height: 5%;
     background: $panel;
@@ -75,9 +111,4 @@ Header {
 Footer {
     height: 5%;
     background: $panel;
-}
-
-RadioSet > RadioButton {
-    width: 1fr;
-    height: auto;
 }
