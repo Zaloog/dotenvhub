@@ -123,7 +123,9 @@ class InteractionPanel(Container):
                 placeholder="env file name for export",
                 id="export-env-name",
             )
-        yield Button("New Env File", id="btn-new-file", variant="success")
+        yield Button(
+            "New Env File", id="btn-new-file", disabled=False, variant="success"
+        )
         yield Button(
             "Edit Env File", id="btn-edit-file", disabled=True, variant="warning"
         )
@@ -133,7 +135,7 @@ class InteractionPanel(Container):
 
 
 class DotEnvHub(App):
-    CSS_PATH = "./assets/tui.css"
+    CSS_PATH = Path("assets/tui.css")
 
     file_to_show = var("")
     file_to_show_path = var("")
@@ -158,8 +160,10 @@ class DotEnvHub(App):
             file_interaction.border_title = "What do you want to do?"
             yield file_interaction
 
+    # Interactions
+
     @on(ListView.Selected)
-    def preview_file(self, event: ListView.Selected):
+    def get_preview_file_path(self, event: ListView.Selected):
         self.file_to_show = event.list_view.highlighted_child.id
         self.query_one("#file-preview").border_title = ""
 
@@ -195,7 +199,6 @@ class DotEnvHub(App):
         text_widget.text = self.text_to_display
         text_widget.action_cursor_page_down()
         text_widget.disabled = True
-        log(self.text_to_display)
 
     @on(Button.Pressed, "#btn_clipboard_path")
     def copy_env_path(self):
@@ -208,7 +211,7 @@ class DotEnvHub(App):
         create_copy_in_cwd(filename=export_filename, filepath=self.file_to_show_path)
 
     @on(Button.Pressed, "#btn_shell_export")
-    def export_env_str(self):
+    def export_env_str_shell(self):
         create_shell_export_str(shell=cfg.shell, env_content=self.text_to_display)
 
     @on(RadioSet.Changed)

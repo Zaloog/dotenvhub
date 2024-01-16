@@ -56,7 +56,6 @@ CollapsibleTitle {
     grid-size: 3;
     grid-columns: 1fr;
     grid-rows: 1fr;
-    /* grid-gutter: 3; */
     background: $panel;
     border: greenyellow;
 }
@@ -96,7 +95,6 @@ CollapsibleTitle {
     height: 50%;
     content-align:center middle ;
 }
-
 
 RadioSet > RadioButton {
     width: 1fr;
