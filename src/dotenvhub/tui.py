@@ -5,6 +5,7 @@ from textual import log, on
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, Vertical, VerticalScroll
 from textual.reactive import var
+from textual.screen import ModalScreen
 from textual.widgets import (
     Button,
     Collapsible,
@@ -14,8 +15,6 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
-    RadioButton,
-    RadioSet,
     TextArea,
 )
 
@@ -75,24 +74,6 @@ class FilePreviewer(TextArea):
     ...
 
 
-class ShellSelector(Container):
-    def compose(self) -> ComposeResult:
-        with Collapsible(
-            title=cfg.shell, id="shell-select", collapsed_symbol="", expanded_symbol=""
-        ):
-            with VerticalScroll():
-                yield RadioSet(
-                    *[
-                        RadioButton(
-                            shell,
-                            id=f"radio-{shell}",
-                            value=True if shell == cfg.shell else False,
-                        )
-                        for shell in SHELLS
-                    ]
-                )
-
-
 class InteractionPanel(Container):
     def compose(self):
         yield Button(
@@ -115,7 +96,7 @@ class InteractionPanel(Container):
         )
         with Vertical(id="interaction-shell-select"):
             yield Label("Select your Shell")
-            yield ShellSelector()
+            yield Button(label=f"{cfg.shell}", id="shell-select", variant="primary")
         with Vertical(id="interaction-export-name"):
             yield Label("Export filename")
             yield Input(
@@ -132,6 +113,29 @@ class InteractionPanel(Container):
         yield Button(
             "Save Env File", id="btn-save-file", disabled=True, variant="success"
         )
+
+
+class ModalShellSelector(ModalScreen):
+    def compose(self) -> ComposeResult:
+        shell_buttons = [
+            Button(label=shell, id=shell, variant="primary") for shell in SHELLS
+        ]
+        for btn in shell_buttons:
+            btn.can_focus = False
+        yield Vertical(
+            Label("Which Shell are you using?", id="question"),
+            *shell_buttons,
+            id="modal-vert",
+        )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        self.app.pop_screen()
+        selected_shell = event.button.id
+        self.app.shell_in_use = selected_shell
+        cfg.shell = self.app.shell_in_use
+
+        shell_button = self.app.query_one("#shell-select")
+        shell_button.label = self.app.shell_in_use
 
 
 class DotEnvHub(App):
@@ -214,15 +218,9 @@ class DotEnvHub(App):
     def export_env_str_shell(self):
         create_shell_export_str(shell=cfg.shell, env_content=self.text_to_display)
 
-    @on(RadioSet.Changed)
-    def set_shell(self, event: RadioSet.Changed):
-        selected_shell = event.pressed.id.split("-")[1]
-        self.shell_in_use = selected_shell
-        cfg.shell = self.shell_in_use
-
-        shell_colabsible = self.query_one("#shell-select")
-        shell_colabsible.title = self.shell_in_use
-        shell_colabsible.collapsed = True
+    @on(Button.Pressed, "#shell-select")
+    def pop_modal_shell(self, event: Button.Pressed):
+        self.push_screen(ModalShellSelector())
 
 
 myapp = DotEnvHub()

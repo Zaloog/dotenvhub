@@ -79,6 +79,15 @@ CollapsibleTitle {
     content-align:center middle;
     margin: 0 0 1 0;
 }
+
+#interaction-shell-select > Button{
+    width: 1fr;
+    height: 1fr;
+    column-span: 1;
+    content-align:center middle;
+    margin: 1 1 1 0;
+}
+
 /* Interaction Export Name */
 #interaction-export-name {
     width: 1fr;
@@ -96,10 +105,6 @@ CollapsibleTitle {
     content-align:center middle ;
 }
 
-RadioSet > RadioButton {
-    width: 1fr;
-    height: auto;
-}
 /* Header Footer */
 Header {
     height: 5%;
@@ -109,4 +114,28 @@ Header {
 Footer {
     height: 5%;
     background: $panel;
+}
+
+/* Modal */
+ModalScreen{
+    align:center middle;
+}
+
+#modal-vert {
+    width: 20%;
+    height: 40%;
+    align:center middle;
+    background: $panel;
+    border:black thick;
+}
+
+#modal-vert > #question {
+    width: 1fr;
+    content-align:center middle;
+}
+#modal-vert > Button {
+    width: 1fr ;
+    height: 1fr ;
+    margin: 1 1 1 1;
+    content-align:center middle;
 }
