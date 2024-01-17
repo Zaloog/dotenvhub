@@ -1,7 +1,19 @@
+import os
 import shutil
 from pathlib import Path
 
 import pyperclip
+
+from .constants import ENV_FILE_DIR_PATH
+
+
+def update_file_tree(path: Path = ENV_FILE_DIR_PATH) -> dict:
+    file_tree_dict = {}
+    for dirpath, _, filenames in os.walk(path):
+        rel_path = Path(dirpath).relative_to(path)
+        file_tree_dict[f"{rel_path}"] = filenames
+
+    return file_tree_dict
 
 
 def copy_path_to_clipboard(path):
@@ -51,6 +63,8 @@ def create_bash_string(env_content: str):
     return bash_str
 
 
-def write_to_file(path, content):
+def write_to_file(path: Path, content):
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     with open(path, "w") as env_file:
         env_file.write(content)

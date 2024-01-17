@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from textual import log, on
@@ -25,6 +24,7 @@ from .utils import (
     create_copy_in_cwd,
     create_shell_export_str,
     get_env_content,
+    update_file_tree,
     write_to_file,
 )
 
@@ -34,17 +34,9 @@ from .utils import (
 
 
 class EnvFileSelector(VerticalScroll):
-    def build_selector(self, path: Path = ENV_FILE_DIR_PATH):
-        self.dir_paths = {}
-        for dirpath, _, filenames in os.walk(path):
-            rel_path = Path(dirpath).relative_to(path)
-            log(rel_path, filenames)
-            self.dir_paths[rel_path] = filenames
-
     def compose(self):
-        self.build_selector()
-        for dirpath, filenames in self.dir_paths.items():
-            if dirpath == Path("."):
+        for dirpath, filenames in self.app.file_tree.items():
+            if dirpath == ".":
                 general_list = ListView(
                     *[
                         ListItem(Label(f":page_facing_up: {file}"), id=file)
@@ -59,12 +51,12 @@ class EnvFileSelector(VerticalScroll):
                         ListItem(Label(f":page_facing_up: {file}"), id=file)
                         for file in filenames
                     ],
-                    id=str(dirpath),
+                    id=dirpath,
                     initial_index=None,
                 )
                 folder_colabs = Collapsible(
                     folder_list,
-                    title=f"{dirpath}",
+                    title=dirpath,
                     collapsed_symbol=":file_folder:",
                     expanded_symbol=":open_file_folder:",
                 )
@@ -79,25 +71,25 @@ class InteractionPanel(Container):
     def compose(self):
         yield Button(
             "Create Shell String",
-            id="btn_shell_export",
+            id="btn-shell-export",
             disabled=True,
             variant="primary",
         )
         yield Button(
             "Export File to current dir",
-            id="btn_export",
+            id="btn-file-export",
             disabled=True,
             variant="primary",
         )
         yield Button(
             "Copy Path to Clipboard",
-            id="btn_clipboard_path",
+            id="btn-copy-path",
             disabled=True,
             variant="primary",
         )
         with Vertical(id="interaction-shell-select"):
             yield Label("Select your Shell")
-            yield Button(label=f"{cfg.shell}", id="shell-select", variant="primary")
+            yield Button(label=f"{cfg.shell}", id="btn-shell-select", variant="primary")
         with Vertical(id="interaction-export-name"):
             yield Label("Export filename")
             yield Input(
@@ -124,9 +116,9 @@ class ModalShellSelector(ModalScreen):
         for btn in shell_buttons:
             btn.can_focus = False
         yield Vertical(
-            Label("Which Shell are you using?", id="question"),
+            Label("Which Shell are you using?"),
             *shell_buttons,
-            id="modal-vert",
+            id="modal-shell-vert",
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -135,8 +127,34 @@ class ModalShellSelector(ModalScreen):
         self.app.shell_in_use = selected_shell
         cfg.shell = self.app.shell_in_use
 
-        shell_button = self.app.query_one("#shell-select")
+        shell_button = self.app.query_one("#btn-shell-select")
         shell_button.label = self.app.shell_in_use
+
+
+class ModalSaveScreen(ModalScreen):
+    def compose(self) -> ComposeResult:
+        yield Vertical(
+            Label(":page_facing_up: Enter File Name"),
+            Input(
+                placeholder="New File Name", id="inp-new-file-name", valid_empty=False
+            ),
+            Label(":file_folder: Enter Folder Name"),
+            Input(
+                placeholder="Enter Folder Name or leave empty", id="inp-new-folder-name"
+            ),
+            Button("Save"),
+            id="modal-save-vert",
+        )
+
+    @on(Button.Pressed)
+    def save_new_file(self) -> None:
+        self.app.pop_screen()
+
+        folder_file = "/".join(
+            inp.value for inp in self.query(Input)[::-1] if inp.value
+        )
+        new_path = ENV_FILE_DIR_PATH / folder_file
+        write_to_file(path=new_path, content=self.app.text_to_display)
 
 
 class DotEnvHub(App):
@@ -145,6 +163,7 @@ class DotEnvHub(App):
     file_to_show = var("")
     file_to_show_path = var("")
     text_to_display = var("")
+    file_tree = var(update_file_tree())
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -167,10 +186,10 @@ class DotEnvHub(App):
 
     # Interactions
 
+    # File Selection
     @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):
         self.file_to_show = event.list_view.highlighted_child.id
-        self.query_one("#file-preview").border_title = ""
 
         if event.list_view.id:
             folder = Path(event.list_view.id)
@@ -193,8 +212,13 @@ class DotEnvHub(App):
 
     @on(ListView.Selected)
     def enable_buttons(self):
-        for btn in self.query(Button).exclude("#btn-save-file"):
-            btn.disabled = False
+        self.query_one("#btn-shell-export").disabled = False
+        self.query_one("#btn-file-export").disabled = False
+        self.query_one("#btn-copy-path").disabled = False
+
+        self.query_one("#btn-new-file").disabled = False
+        self.query_one("#btn-save-file").disabled = True
+        self.query_one("#btn-edit-file").disabled = False
 
     @on(ListView.Selected)
     def update_preview_text(self):
@@ -205,23 +229,46 @@ class DotEnvHub(App):
         text_widget.action_cursor_page_down()
         text_widget.disabled = True
 
-    @on(Button.Pressed, "#btn_clipboard_path")
+    # Export Interactions
+    @on(Button.Pressed, "#btn-copy-path")
     def copy_env_path(self):
         copy_path_to_clipboard(path=self.file_to_show_path)
         log("copied file path to clipboard")
 
-    @on(Button.Pressed, "#btn_export")
+    @on(Button.Pressed, "#btn-file-export")
     def export_env_file(self):
         export_filename = self.query_one(Input).value
         create_copy_in_cwd(filename=export_filename, filepath=self.file_to_show_path)
 
-    @on(Button.Pressed, "#btn_shell_export")
+    @on(Button.Pressed, "#btn-shell-export")
     def export_env_str_shell(self):
         create_shell_export_str(shell=cfg.shell, env_content=self.text_to_display)
 
-    @on(Button.Pressed, "#shell-select")
-    def pop_modal_shell(self, event: Button.Pressed):
+    # Shell Select Interactions
+    @on(Button.Pressed, "#btn-shell-select")
+    def pop_modal_shell(self):
         self.push_screen(ModalShellSelector())
+
+    # Env File Interactions
+    @on(Button.Pressed, "#btn-new-file")
+    def new_file(self, event: Button.Pressed):
+        self.file_to_show = ""
+        self.file_to_show_path = ""
+
+        text_widget = self.query_one(TextArea)
+        text_widget.text = ""
+        text_widget.disabled = False
+        text_widget.focus()
+
+        event.button.disabled = True
+        self.query_one("#btn-edit-file").disabled = True
+        self.query_one("#btn-save-file").disabled = False
+
+        self.query_one("#file-preview").border_title = "Creating New .Env File ..."
+
+        for views in self.query(ListView):
+            if views.highlighted_child:
+                views.index = None
 
     @on(Button.Pressed, "#btn-edit-file")
     def edit_file(self, event: Button.Pressed):
@@ -231,6 +278,12 @@ class DotEnvHub(App):
 
         save_button = self.query_one("#btn-save-file")
         save_button.disabled = False
+        event.button.disabled = True
+
+        # log(self.file_tree)
+        # self.file_tree = update_file_tree()
+        # log(self.file_tree)
+        # self.query_one(EnvFileSelector).compose()
 
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
@@ -238,11 +291,15 @@ class DotEnvHub(App):
         self.text_to_display = text_widget.text
         text_widget.disabled = True
 
-        log(self.file_to_show_path)
-        write_to_file(path=self.file_to_show_path, content=self.text_to_display)
+        event.button.disabled = True
+        self.query_one("#btn-edit-file").disabled = False
 
-        save_button = self.query_one("#btn-save-file")
-        save_button.disabled = False
+        if self.file_to_show:
+            write_to_file(
+                path=Path(self.file_to_show_path), content=self.text_to_display
+            )
+        else:
+            self.push_screen(ModalSaveScreen())
 
 
 myapp = DotEnvHub()
