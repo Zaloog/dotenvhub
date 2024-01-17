@@ -18,7 +18,7 @@ from textual.widgets import (
 )
 
 from .config import cfg
-from .constants import ENV_FILE_DIR_PATH, SHELLS
+from .constants import ENV_FILE_DIR_PATH
 from .utils import (
     copy_path_to_clipboard,
     create_copy_in_cwd,
@@ -27,6 +27,8 @@ from .utils import (
     update_file_tree,
     write_to_file,
 )
+from .widgets.interactionpanel import InteractionPanel
+from .widgets.modals import ModalShellSelector
 
 # Fragen
 # Do Updates happen in Displayed UI based on File System Changes
@@ -67,70 +69,6 @@ class FilePreviewer(TextArea):
     ...
 
 
-class InteractionPanel(Container):
-    def compose(self):
-        yield Button(
-            "Create Shell String",
-            id="btn-shell-export",
-            disabled=True,
-            variant="primary",
-        )
-        yield Button(
-            "Export File to current dir",
-            id="btn-file-export",
-            disabled=True,
-            variant="primary",
-        )
-        yield Button(
-            "Copy Path to Clipboard",
-            id="btn-copy-path",
-            disabled=True,
-            variant="primary",
-        )
-        with Vertical(id="interaction-shell-select"):
-            yield Label("Select your Shell")
-            yield Button(label=f"{cfg.shell}", id="btn-shell-select", variant="primary")
-        with Vertical(id="interaction-export-name"):
-            yield Label("Export filename")
-            yield Input(
-                value=".env",
-                placeholder="env file name for export",
-                id="export-env-name",
-            )
-        yield Button(
-            "New Env File", id="btn-new-file", disabled=False, variant="success"
-        )
-        yield Button(
-            "Edit Env File", id="btn-edit-file", disabled=True, variant="warning"
-        )
-        yield Button(
-            "Save Env File", id="btn-save-file", disabled=True, variant="success"
-        )
-
-
-class ModalShellSelector(ModalScreen):
-    def compose(self) -> ComposeResult:
-        shell_buttons = [
-            Button(label=shell, id=shell, variant="primary") for shell in SHELLS
-        ]
-        for btn in shell_buttons:
-            btn.can_focus = False
-        yield Vertical(
-            Label("Which Shell are you using?"),
-            *shell_buttons,
-            id="modal-shell-vert",
-        )
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        self.app.pop_screen()
-        selected_shell = event.button.id
-        self.app.shell_in_use = selected_shell
-        cfg.shell = self.app.shell_in_use
-
-        shell_button = self.app.query_one("#btn-shell-select")
-        shell_button.label = self.app.shell_in_use
-
-
 class ModalSaveScreen(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Vertical(
@@ -164,6 +102,7 @@ class DotEnvHub(App):
     file_to_show_path = var("")
     text_to_display = var("")
     file_tree = var(update_file_tree())
+    current_shell = var(cfg.shell)
 
     def compose(self) -> ComposeResult:
         yield Header()
