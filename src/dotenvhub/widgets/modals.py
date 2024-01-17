@@ -1,6 +1,7 @@
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import Vertical
+from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.widgets import Button, Input, Label
 
@@ -35,16 +36,15 @@ class ModalShellSelector(ModalScreen):
 
 
 class ModalSaveScreen(ModalScreen):
+    test = reactive(":page_facing_up: Enter File Name")
+
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Label(":page_facing_up: Enter File Name"),
+            Label("How to save file: e.g. FOLDER/FILE"),
             Input(
-                placeholder="New File Name", id="inp-new-file-name", valid_empty=False
+                placeholder="New File Name", id="inp-new-file-name", valid_empty=True
             ),
-            Label(":file_folder: Enter Folder Name"),
-            Input(
-                placeholder="Enter Folder Name or leave empty", id="inp-new-folder-name"
-            ),
+            Label(self.test, id="lbl-new-file-name"),
             Button("Save"),
             id="modal-save-vert",
         )
@@ -53,10 +53,7 @@ class ModalSaveScreen(ModalScreen):
     def save_new_file(self) -> None:
         self.app.pop_screen()
 
-        folder_file = "/".join(
-            inp.value for inp in self.query(Input)[::-1] if inp.value
-        )
-        new_path = ENV_FILE_DIR_PATH / folder_file
+        new_path = ENV_FILE_DIR_PATH / self.query_one(Input).value
         write_to_file(path=new_path, content=self.app.current_content)
 
         self.app.file_tree = update_file_tree()
@@ -65,3 +62,19 @@ class ModalSaveScreen(ModalScreen):
         self.app.query_one("#app-grid").mount(
             EnvFileSelector(id="file-selector"), before="#file-preview"
         )
+
+    @on(Input.Changed, "#inp-new-file-name")
+    def format_name(self, event: Input.Changed):
+        text = event.input.value
+        if "/" not in text:
+            preview_name = f":page_facing_up: {text}"
+        elif len(text.split("/")) == 2:
+            folder, file = text.split("/")
+            preview_name = f":file_folder: {folder} / :page_facing_up: {file}"
+        else:
+            preview_name = ":red_cross: Enter a valid Folder/File Name"
+
+        self.test = preview_name
+
+        self.query_one("#lbl-new-file-name").remove()
+        self.mount(Label(self.test, id="lbl-new-file-name"), after="#inp-new-file-name")
