@@ -25,6 +25,7 @@ from .utils import (
     create_copy_in_cwd,
     create_shell_export_str,
     get_env_content,
+    write_to_file,
 )
 
 # Fragen
@@ -192,7 +193,7 @@ class DotEnvHub(App):
 
     @on(ListView.Selected)
     def enable_buttons(self):
-        for btn in self.query(Button):
+        for btn in self.query(Button).exclude("#btn-save-file"):
             btn.disabled = False
 
     @on(ListView.Selected)
@@ -221,6 +222,27 @@ class DotEnvHub(App):
     @on(Button.Pressed, "#shell-select")
     def pop_modal_shell(self, event: Button.Pressed):
         self.push_screen(ModalShellSelector())
+
+    @on(Button.Pressed, "#btn-edit-file")
+    def edit_file(self, event: Button.Pressed):
+        text_widget = self.query_one(TextArea)
+        text_widget.disabled = False
+        text_widget.focus()
+
+        save_button = self.query_one("#btn-save-file")
+        save_button.disabled = False
+
+    @on(Button.Pressed, "#btn-save-file")
+    def save_file(self, event: Button.Pressed):
+        text_widget = self.query_one(TextArea)
+        self.text_to_display = text_widget.text
+        text_widget.disabled = True
+
+        log(self.file_to_show_path)
+        write_to_file(path=self.file_to_show_path, content=self.text_to_display)
+
+        save_button = self.query_one("#btn-save-file")
+        save_button.disabled = False
 
 
 myapp = DotEnvHub()

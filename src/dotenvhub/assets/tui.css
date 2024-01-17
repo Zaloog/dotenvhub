@@ -116,14 +116,14 @@ Footer {
     background: $panel;
 }
 
-/* Modal */
+/* Modal for Shell Selection */
 ModalScreen{
     align:center middle;
 }
 
 #modal-vert {
     width: 20%;
-    height: 40%;
+    height: 35%;
     align:center middle;
     background: $panel;
     border:black thick;
@@ -135,7 +135,7 @@ ModalScreen{
 }
 #modal-vert > Button {
     width: 1fr ;
-    height: 1fr ;
+    height: auto ;
     margin: 1 1 1 1;
     content-align:center middle;
 }

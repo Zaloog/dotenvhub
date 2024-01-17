@@ -49,3 +49,8 @@ def create_bash_string(env_content: str):
     bash_str = " ; ".join(key_val_list)
     pyperclip.copy(bash_str)
     return bash_str
+
+
+def write_to_file(path, content):
+    with open(path, "w") as env_file:
+        env_file.write(content)
