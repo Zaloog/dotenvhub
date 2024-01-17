@@ -125,7 +125,7 @@ class InteractionPanel(Container):
 
         if self.app.file_to_show:
             write_to_file(
-                path=Path(self.app.file_to_show_path), content=self.app.text_to_display
+                path=Path(self.app.file_to_show_path), content=self.app.current_content
             )
         else:
             self.app.push_screen(ModalSaveScreen())
