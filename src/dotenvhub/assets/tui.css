@@ -22,9 +22,22 @@ ListView {
 }
 
 ListItem {
+    layout:grid;
+    grid-size: 5;
     height: auto;
     padding: 1;
+    align: left middle;
 }
+ListItem > Label {
+    height: auto;
+    width: 1fr;
+    column-span: 4;
+}
+ListItem > Button {
+    height: auto;
+    width: 1fr;
+}
+
 Collapsible{
     border: $panel thick ;
     background:$panel;
@@ -45,7 +58,6 @@ CollapsibleTitle {
     background: $panel;
     border: red;
     height: 100%;
-    margin-right: 0;
     background: $boost;
 }
 /* ###############################################  */

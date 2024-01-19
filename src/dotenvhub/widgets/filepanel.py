@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from textual import log, on
+from textual import on
 from textual.containers import VerticalScroll
-from textual.widgets import Collapsible, Label, ListItem, ListView, TextArea
+from textual.widgets import Button, Collapsible, Label, ListItem, ListView, TextArea
 
 from ..constants import ENV_FILE_DIR_PATH
-from ..utils import get_env_content
+from ..utils import get_env_content, update_file_tree
 
 
 class EnvFileSelector(VerticalScroll):
@@ -14,7 +14,11 @@ class EnvFileSelector(VerticalScroll):
             if dirpath == ".":
                 general_list = ListView(
                     *[
-                        ListItem(Label(f":page_facing_up: {file}"), id=file)
+                        ListItem(
+                            Label(f":page_facing_up: {file}"),
+                            Button.error("Delete", id=f"btn-del-{file}"),
+                            id=file,
+                        )
                         for file in filenames
                     ],
                     initial_index=None,
@@ -23,12 +27,17 @@ class EnvFileSelector(VerticalScroll):
             else:
                 folder_list = ListView(
                     *[
-                        ListItem(Label(f":page_facing_up: {file}"), id=file)
+                        ListItem(
+                            Label(f":page_facing_up: {file}"),
+                            Button.error("Delete", id=f"btn-del-{dirpath}/{file}"),
+                            id=file,
+                        )
                         for file in filenames
                     ],
                     id=dirpath,
                     initial_index=None,
                 )
+
                 folder_colabs = Collapsible(
                     folder_list,
                     title=dirpath,
@@ -41,6 +50,7 @@ class EnvFileSelector(VerticalScroll):
     def get_preview_file_path(self, event: ListView.Selected):
         self.app.file_to_show = event.list_view.highlighted_child.id
 
+        # only collapsible lists have ID
         if event.list_view.id:
             folder = Path(event.list_view.id)
             self.app.file_to_show_path = (
@@ -78,4 +88,21 @@ class EnvFileSelector(VerticalScroll):
         text_widget.text = self.app.current_content
         text_widget.action_cursor_page_down()
         text_widget.disabled = True
-        log(self.app.screen.query_one("#app-grid").children)
+
+    @on(Button.Pressed)
+    def delete_env_file(self, event: Button.Pressed):
+        folder_file_path = event.button.id[8:]
+
+        # Delete File
+        (ENV_FILE_DIR_PATH / folder_file_path).unlink()
+        try:
+            # If Folder Empty delete Folder
+            (ENV_FILE_DIR_PATH / folder_file_path).parent.rmdir()
+        except OSError:
+            pass
+
+        self.app.file_tree = update_file_tree()
+        self.app.query_one(EnvFileSelector).remove()
+        self.app.query_one("#app-grid").mount(
+            EnvFileSelector(id="file-selector"), before="#file-preview"
+        )
