@@ -49,9 +49,6 @@ class InteractionPanel(Container):
             "New Env File", id="btn-new-file", disabled=False, variant="success"
         )
         yield Button(
-            "Edit Env File", id="btn-edit-file", disabled=True, variant="warning"
-        )
-        yield Button(
             "Save Env File", id="btn-save-file", disabled=True, variant="success"
         )
 
@@ -93,7 +90,7 @@ class InteractionPanel(Container):
         text_widget.focus()
 
         event.button.disabled = True
-        self.query_one("#btn-edit-file").disabled = True
+        # self.query_one("#btn-edit-file").disabled = True
         self.query_one("#btn-save-file").disabled = False
 
         self.app.query_one("#file-preview").border_title = "Creating New .Env File ..."
@@ -102,18 +99,6 @@ class InteractionPanel(Container):
             if views.highlighted_child:
                 views.index = None
 
-    @on(Button.Pressed, "#btn-edit-file")
-    def edit_file(self, event: Button.Pressed):
-        text_widget = self.app.query_one(TextArea)
-        text_widget.disabled = False
-        text_widget.focus()
-
-        save_button = self.query_one("#btn-save-file")
-        save_button.disabled = False
-        event.button.disabled = True
-
-        log(self.app.file_tree)
-
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
         text_widget = self.app.query_one(TextArea)
@@ -121,7 +106,6 @@ class InteractionPanel(Container):
         text_widget.disabled = True
 
         event.button.disabled = True
-        self.query_one("#btn-edit-file").disabled = False
 
         if self.app.file_to_show:
             write_to_file(

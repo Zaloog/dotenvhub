@@ -16,7 +16,12 @@ class EnvFileSelector(VerticalScroll):
                     *[
                         ListItem(
                             Label(f":page_facing_up: {file}"),
-                            Button.error("Delete", id=f"btn-del-{file}"),
+                            Button.warning(
+                                "Edit", id=f"btn-edit-{file}", classes="edit"
+                            ),
+                            Button.error(
+                                "Delete", id=f"btn-del-{file}", classes="delete"
+                            ),
                             id=file,
                         )
                         for file in filenames
@@ -29,7 +34,14 @@ class EnvFileSelector(VerticalScroll):
                     *[
                         ListItem(
                             Label(f":page_facing_up: {file}"),
-                            Button.error("Delete", id=f"btn-del-{dirpath}/{file}"),
+                            Button.warning(
+                                "Edit", id=f"btn-edit-{dirpath}/{file}", classes="edit"
+                            ),
+                            Button.error(
+                                "Delete",
+                                id=f"btn-del-{dirpath}/{file}",
+                                classes="delete",
+                            ),
                             id=file,
                         )
                         for file in filenames
@@ -78,7 +90,7 @@ class EnvFileSelector(VerticalScroll):
 
         self.app.query_one("#btn-new-file").disabled = False
         self.app.query_one("#btn-save-file").disabled = True
-        self.app.query_one("#btn-edit-file").disabled = False
+        # self.app.query_one("#btn-edit-file").disabled = False
 
     @on(ListView.Selected)
     def update_preview_text(self):
@@ -89,7 +101,7 @@ class EnvFileSelector(VerticalScroll):
         text_widget.action_cursor_page_down()
         text_widget.disabled = True
 
-    @on(Button.Pressed)
+    @on(Button.Pressed, ".delete")
     def delete_env_file(self, event: Button.Pressed):
         folder_file_path = event.button.id[8:]
 
@@ -106,3 +118,17 @@ class EnvFileSelector(VerticalScroll):
         self.app.query_one("#app-grid").mount(
             EnvFileSelector(id="file-selector"), before="#file-preview"
         )
+
+        # Clear Text Missing Border Title
+        self.app.file_to_show = ""
+        self.app.file_to_show_path = ""
+        self.app.current_content = ""
+
+        text_widget = self.app.query_one(TextArea)
+        text_widget.text = ""
+
+    @on(Button.Pressed, ".edit")
+    def edit_env_file(self):
+        text_widget = self.app.query_one(TextArea)
+        text_widget.disabled = False
+        text_widget.focus()

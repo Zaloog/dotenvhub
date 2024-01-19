@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import Vertical
@@ -12,6 +14,8 @@ from .filepanel import EnvFileSelector
 
 
 class ModalShellSelector(ModalScreen):
+    CSS_PATH = Path("../assets/modal_shell.css")
+
     def compose(self) -> ComposeResult:
         shell_buttons = [
             Button(label=shell, id=shell, variant="primary") for shell in SHELLS
@@ -36,7 +40,8 @@ class ModalShellSelector(ModalScreen):
 
 
 class ModalSaveScreen(ModalScreen):
-    test = reactive(":page_facing_up: Enter File Name")
+    CSS_PATH = Path("../assets/modal_save.css")
+    preview = reactive(":page_facing_up: Enter File Name")
 
     def compose(self) -> ComposeResult:
         yield Vertical(
@@ -44,7 +49,7 @@ class ModalSaveScreen(ModalScreen):
             Input(
                 placeholder="New File Name", id="inp-new-file-name", valid_empty=True
             ),
-            Label(self.test, id="lbl-new-file-name"),
+            Label(self.preview, id="lbl-new-file-name"),
             Button("Save"),
             id="modal-save-vert",
         )
@@ -74,7 +79,9 @@ class ModalSaveScreen(ModalScreen):
         else:
             preview_name = ":red_cross: Enter a valid Folder/File Name"
 
-        self.test = preview_name
+        self.preview = preview_name
 
         self.query_one("#lbl-new-file-name").remove()
-        self.mount(Label(self.test, id="lbl-new-file-name"), after="#inp-new-file-name")
+        self.mount(
+            Label(self.preview, id="lbl-new-file-name"), after="#inp-new-file-name"
+        )

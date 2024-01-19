@@ -1,0 +1,24 @@
+ModalScreen{
+    align:center middle;
+}
+
+
+/* Modal for New File Selection */
+#modal-save-vert {
+    width: 20%;
+    height: 35%;
+    align:center middle;
+    background: $panel;
+    border:black thick;
+}
+
+#modal-save-vert > Label {
+    width: 1fr;
+    content-align:center middle;
+}
+#modal-save-vert > Button {
+    width: 1fr ;
+    height: auto ;
+    margin: 1 1 1 1;
+    content-align:center middle;
+}
