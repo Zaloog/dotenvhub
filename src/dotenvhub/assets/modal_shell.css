@@ -4,8 +4,12 @@ ModalScreen{
 }
 
 #modal-shell-vert {
+    layout:grid;
     width: 20%;
-    height: 35%;
+    height: auto;
+    grid-size: 1;
+    grid-columns: 1fr;
+    grid-rows: 4;
     align:center middle;
     background: $panel;
     border:black thick;
@@ -18,6 +22,6 @@ ModalScreen{
 #modal-shell-vert > Button {
     width: 1fr ;
     height: auto ;
-    margin: 1 1 1 1;
+    margin: 0 1 1 1;
     content-align:center middle;
 }

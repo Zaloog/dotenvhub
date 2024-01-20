@@ -82,6 +82,7 @@ CollapsibleTitle {
 /* Interaction Shell Selector */
 #interaction-shell-select {
     width: 1fr;
+    height: 1fr;
     column-span: 1;
     margin: 0 0 0 2 ;
 }
@@ -94,7 +95,7 @@ CollapsibleTitle {
 
 #interaction-shell-select > Button{
     width: 1fr;
-    height: 1fr;
+    height: 100%;
     column-span: 1;
     content-align:center middle;
     margin: 1 1 1 0;
@@ -113,7 +114,7 @@ CollapsibleTitle {
     margin: 0 0 1 0;
 }
 #interaction-export-name > Input{
-    height: 50%;
+    height: auto;
     content-align:center middle ;
 }
 
