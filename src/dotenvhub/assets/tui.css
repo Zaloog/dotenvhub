@@ -51,6 +51,16 @@ CollapsibleTitle {
     content-align: left middle;
 }
 
+.edit {
+    display: none
+}
+.delete {
+    display: none
+}
+.active {
+    display: block;
+}
+
 /* ###############################################  */
 /* Env File Preview */
 #file-preview  {

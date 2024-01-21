@@ -75,7 +75,7 @@ def main(args):
         return
 
     if not args:
-        tui.myapp.run()
+        tui.DotEnvHub().run()
 
     if parsed_args:
         ...

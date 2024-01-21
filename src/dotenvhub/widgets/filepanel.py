@@ -61,6 +61,8 @@ class EnvFileSelector(VerticalScroll):
     @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):
         self.app.file_to_show = event.list_view.highlighted_child.id.split("-")[1]
+        self.query(Button).remove_class("active")
+        event.list_view.highlighted_child.query(Button).add_class("active")
 
         # only collapsible lists have ID
         if event.list_view.id:
@@ -77,10 +79,9 @@ class EnvFileSelector(VerticalScroll):
 
     @on(ListView.Selected)
     def reset_highlights(self, event: ListView.Selected):
-        for views in self.query(ListView):
-            if views.highlighted_child:
-                if views.highlighted_child.id != event.list_view.highlighted_child.id:
-                    views.index = None
+        for lviews in self.query(ListView):
+            if lviews.id != event.list_view.id:
+                lviews.index = None
 
     @on(ListView.Selected)
     def enable_buttons(self):
@@ -90,7 +91,6 @@ class EnvFileSelector(VerticalScroll):
 
         self.app.query_one("#btn-new-file").disabled = False
         self.app.query_one("#btn-save-file").disabled = True
-        # self.app.query_one("#btn-edit-file").disabled = False
 
     @on(ListView.Selected)
     def update_preview_text(self):
