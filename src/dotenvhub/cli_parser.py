@@ -4,6 +4,8 @@ import sys
 
 from dotenvhub import __version__
 
+from .constants import SHELLS
+
 
 def parse_args(args):
     """Parse command line parameters
@@ -15,19 +17,11 @@ def parse_args(args):
     Returns:
       :obj:`argparse.Namespace`: command line parameters namespace
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = argparse.ArgumentParser(description="DotEnvHub your .env file manager")
     parser.add_argument(
         "--version",
         action="version",
         version=f"dotenvhub {__version__}",
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        dest="loglevel",
-        help="set loglevel to INFO",
-        action="store_const",
-        const=logging.INFO,
     )
     parser.add_argument(
         "-s",
@@ -35,6 +29,28 @@ def parse_args(args):
         help="scan recursively for .env-files",
         action="store_true",
     )
+    parser.add_argument(
+        "-S",
+        "--shell",
+        dest="shell",
+        choices=SHELLS,
+        help="Select for which shell you want to generate export string",
+    )
+    parser.add_argument(
+        "-E",
+        "--export",
+        dest="export",
+        help="Export target File to CWD",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-N",
+        "--name",
+        dest="filename",
+        required=any(i in sys.argv for i in ["-S", "--shell"]),
+        help="Which File to choose",
+    )
+
     parser.add_argument(
         "-vv",
         "--very-verbose",
@@ -44,15 +60,3 @@ def parse_args(args):
         const=logging.DEBUG,
     )
     return parser.parse_args(args)
-
-
-def setup_logging(loglevel):
-    """Setup basic logging
-
-    Args:
-      loglevel (int): minimum loglevel for emitting messages
-    """
-    logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
-    logging.basicConfig(
-        level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %H:%M:%S"
-    )

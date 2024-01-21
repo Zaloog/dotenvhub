@@ -12,7 +12,7 @@ from .constants import (
 def create_init_config(conf_path=CONFIG_PATH, data_path=DATA_PATH):
     config = configparser.ConfigParser(default_section=None)
     config.optionxform = str
-    config["settings"] = {"Shell": "pwsh"}
+    config["settings"] = {"Shell": "bash"}
 
     if not ENV_FILE_DIR_PATH.exists():
         data_path.mkdir(exist_ok=True)

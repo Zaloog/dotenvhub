@@ -2,7 +2,7 @@ from pathlib import Path
 
 from textual.app import App, ComposeResult
 from textual.containers import Container
-from textual.reactive import reactive, var
+from textual.reactive import var
 from textual.widgets import Footer, Header
 
 from .config import cfg
@@ -14,13 +14,12 @@ from .widgets.previewpanel import FilePreviewer
 
 class DotEnvHub(App):
     CSS_PATH = Path("assets/tui.css")
-    BINDINGS = [("down", "file_interaction.save_file", "Save File")]
 
     file_to_show = var("")
     file_to_show_path = var("")
     file_tree = var(update_file_tree())
-    current_content = reactive("")
-    current_shell = reactive(cfg.shell)
+    current_content = var("")
+    current_shell = var(cfg.shell)
 
     def compose(self) -> ComposeResult:
         yield Header()

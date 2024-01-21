@@ -19,17 +19,23 @@ class ModalShellSelector(ModalScreen):
 
     def compose(self) -> ComposeResult:
         shell_buttons = [
-            Button(label=shell, id=shell, variant="primary") for shell in SHELLS
+            Button(label=shell, id=shell, variant="primary", classes="shell")
+            for shell in SHELLS
         ]
         for btn in shell_buttons:
             btn.can_focus = False
         yield Vertical(
             Label("Which Shell are you using?"),
             *shell_buttons,
+            Button("Cancel", id="btn-modal-cancel"),
             id="modal-shell-vert",
         )
 
-    @on(Button.Pressed)
+    @on(Button.Pressed, "#btn-modal-cancel")
+    def close_window(self) -> None:
+        self.dismiss()
+
+    @on(Button.Pressed, ".shell")
     def pop_up_shell_select(self, event: Button.Pressed) -> None:
         self.dismiss()
         selected_shell = event.button.id
@@ -54,15 +60,20 @@ class ModalSaveScreen(ModalScreen):
                 validate_on=["changed", "submitted"],
             ),
             Label(self.preview, id="lbl-new-file-name"),
-            Button("Save"),
+            Button("Save", id="btn-modal-save"),
+            Button("Cancel", id="btn-modal-cancel"),
             id="modal-save-vert",
         )
 
     @on(Input.Submitted)
     def press_button(self):
-        self.query_one(Button).press()
+        self.query_one("#btn-modal-save", Button).press()
 
-    @on(Button.Pressed)
+    @on(Button.Pressed, "#btn-modal-cancel")
+    def close_window(self) -> None:
+        self.dismiss()
+
+    @on(Button.Pressed, "#btn-modal-save")
     def save_new_file(self) -> None:
         self.dismiss()
 
@@ -90,9 +101,9 @@ class ModalSaveScreen(ModalScreen):
         self.preview = preview_name
 
         if self.query_one(Input).is_valid:
-            self.query_one(Button).disabled = False
+            self.query_one("#btn-modal-save", Button).disabled = False
         else:
-            self.query_one(Button).disabled = True
+            self.query_one("#btn-modal-save", Button).disabled = True
 
         self.query_one("#lbl-new-file-name").remove()
         self.mount(

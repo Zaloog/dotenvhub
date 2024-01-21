@@ -22,7 +22,7 @@ References:
 
 import sys
 
-from dotenvhub import cli_parser, config, tui
+from dotenvhub import cli_parser, config, constants, tui, utils
 
 __author__ = "Zaloog"
 __copyright__ = "Zaloog"
@@ -77,8 +77,15 @@ def main(args):
     if not args:
         tui.DotEnvHub().run()
 
-    if parsed_args:
-        ...
+    if parsed_args.shell and parsed_args.filename:
+        content = utils.get_env_content(
+            filepath=constants.ENV_FILE_DIR_PATH / parsed_args.filename
+        )
+
+        utils.create_shell_export_str(shell=parsed_args.shell, env_content=content)
+        print(parsed_args)
+        print("Ins Clipboard geadded:")
+        print(content)
 
 
 def run():

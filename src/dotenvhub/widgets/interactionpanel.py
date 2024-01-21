@@ -96,8 +96,8 @@ class InteractionPanel(Container):
         self.app.query_one("#file-preview").border_title = "Creating New .Env File ..."
 
         for views in self.app.query(ListView):
-            if views.highlighted_child:
-                views.index = None
+            views.query(Button).remove_class("active")
+            views.index = None
 
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):

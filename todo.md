@@ -3,14 +3,9 @@
 
 ## .Env Selector Container
 - Navigation j,k?
-- Edit Button hightlight nicht section
 ## Exporter Interaction Container
-- Button Interactivity
-  - Disabled ja nein
-  - Highlight/focus listitem aktuell erstellte datei bei save
 
 ## Modal Screens
-- close button/bindings
 
 ## Config File
 - Last copied .env content?
