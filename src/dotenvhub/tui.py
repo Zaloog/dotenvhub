@@ -14,6 +14,7 @@ from .widgets.previewpanel import FilePreviewer
 
 class DotEnvHub(App):
     CSS_PATH = Path("assets/tui.css")
+    BINDINGS = [("down", "file_interaction.save_file", "Save File")]
 
     file_to_show = var("")
     file_to_show_path = var("")

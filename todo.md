@@ -1,19 +1,32 @@
 # DotEnvHub Tasks
 
-## .Env-Preview Area Container
 
 ## .Env Selector Container
 - Navigation j,k?
+- Edit Button hightlight nicht section
 ## Exporter Interaction Container
-- Three Buttons
-  - Bt1: Copy path of .env file to clipboard
-  - Bt2: Export file to cwd as defined in NameField
-  - Bt3: Depending on Shell generate String to set .env Vars
-- Field for defining export name
-  - NameField: Defining name of exported .env
-  - HintField: Red if file with same name is already present
+- Button Interactivity
+  - Disabled ja nein
+  - Highlight/focus listitem aktuell erstellte datei bei save
+
+## Modal Screens
+- close button/bindings
 
 ## Config File
-- current Shell
+- Last copied .env content?
 
-- Border Text for Sections
+# Argparse Funktionen
+- ohne Args: Tui App
+
+- Argumente / Flags
+  - Import: Pfad zur datei
+    - name: target name
+  - export: file, path, shells?
+    - name der datei unter env-dirs folder
+
++ console Log?
+
+# Generell
+- Tests
+- Docs
+- Bindings

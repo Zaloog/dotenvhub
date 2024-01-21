@@ -31,13 +31,12 @@ class ModalShellSelector(ModalScreen):
 
     @on(Button.Pressed)
     def pop_up_shell_select(self, event: Button.Pressed) -> None:
-        self.app.pop_screen()
+        self.dismiss()
         selected_shell = event.button.id
         self.app.current_shell = selected_shell
         cfg.shell = self.app.current_shell
 
-        shell_button = self.app.query_one("#btn-shell-select")
-        shell_button.label = self.app.current_shell
+        self.app.query_one("#btn-shell-select").label = self.app.current_shell
 
 
 class ModalSaveScreen(ModalScreen):
@@ -65,7 +64,7 @@ class ModalSaveScreen(ModalScreen):
 
     @on(Button.Pressed)
     def save_new_file(self) -> None:
-        self.app.pop_screen()
+        self.dismiss()
 
         new_path = ENV_FILE_DIR_PATH / self.query_one(Input).value
         write_to_file(path=new_path, content=self.app.current_content)
