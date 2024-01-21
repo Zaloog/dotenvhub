@@ -6,7 +6,7 @@ from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.validation import Regex
-from textual.widgets import Button, Input, Label
+from textual.widgets import Button, Input, Label, TextArea
 
 from ..config import cfg
 from ..constants import ENV_FILE_DIR_PATH, SHELLS
@@ -72,6 +72,8 @@ class ModalSaveScreen(ModalScreen):
     @on(Button.Pressed, "#btn-modal-cancel")
     def close_window(self) -> None:
         self.dismiss()
+        self.app.query_one(TextArea).disabled = False
+        self.app.query_one(TextArea).focus()
 
     @on(Button.Pressed, "#btn-modal-save")
     def save_new_file(self) -> None:
@@ -89,7 +91,7 @@ class ModalSaveScreen(ModalScreen):
 
     @on(Input.Changed, "#inp-new-file-name")
     def format_name(self, event: Input.Changed):
-        text = event.input.value
+        text = event.input.value or event.input.placeholder
         if "/" not in text:
             preview_name = f":page_facing_up: {text}"
         elif len(text.split("/")) == 2:

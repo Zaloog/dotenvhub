@@ -90,7 +90,6 @@ class InteractionPanel(Container):
         text_widget.focus()
 
         event.button.disabled = True
-        # self.query_one("#btn-edit-file").disabled = True
         self.query_one("#btn-save-file").disabled = False
 
         self.app.query_one("#file-preview").border_title = "Creating New .Env File ..."
