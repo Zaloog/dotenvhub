@@ -5,6 +5,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
+from textual.validation import Regex
 from textual.widgets import Button, Input, Label
 
 from ..config import cfg
@@ -47,12 +48,20 @@ class ModalSaveScreen(ModalScreen):
         yield Vertical(
             Label("How to save file: e.g. FOLDER/FILE"),
             Input(
-                placeholder="New File Name", id="inp-new-file-name", valid_empty=True
+                placeholder="New File Name",
+                id="inp-new-file-name",
+                valid_empty=False,
+                validators=[Regex("^[a-zA-Z0-9_.]*(/[a-zA-Z0-9_.]*)?$")],
+                validate_on=["changed", "submitted"],
             ),
             Label(self.preview, id="lbl-new-file-name"),
             Button("Save"),
             id="modal-save-vert",
         )
+
+    @on(Input.Submitted)
+    def press_button(self):
+        self.query_one(Button).press()
 
     @on(Button.Pressed)
     def save_new_file(self) -> None:
@@ -74,12 +83,17 @@ class ModalSaveScreen(ModalScreen):
         if "/" not in text:
             preview_name = f":page_facing_up: {text}"
         elif len(text.split("/")) == 2:
-            folder, file = text.split("/")
+            folder, file = [el.strip() for el in text.split("/")]
             preview_name = f":file_folder: {folder} / :page_facing_up: {file}"
         else:
-            preview_name = ":red_cross: Enter a valid Folder/File Name"
+            preview_name = ":cross_mark: Enter a valid Folder/File Name"
 
         self.preview = preview_name
+
+        if self.query_one(Input).is_valid:
+            self.query_one(Button).disabled = False
+        else:
+            self.query_one(Button).disabled = True
 
         self.query_one("#lbl-new-file-name").remove()
         self.mount(

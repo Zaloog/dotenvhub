@@ -17,8 +17,8 @@ class DotEnvHub(App):
 
     file_to_show = var("")
     file_to_show_path = var("")
-    current_content = reactive("")
     file_tree = var(update_file_tree())
+    current_content = reactive("")
     current_shell = reactive(cfg.shell)
 
     def compose(self) -> ComposeResult:

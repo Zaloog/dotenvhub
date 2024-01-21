@@ -22,7 +22,7 @@ class EnvFileSelector(VerticalScroll):
                             Button.error(
                                 "Delete", id=f"btn-del-{file}", classes="delete"
                             ),
-                            id=file,
+                            id=f"file-{file}",
                         )
                         for file in filenames
                     ],
@@ -42,11 +42,11 @@ class EnvFileSelector(VerticalScroll):
                                 id=f"btn-del-{dirpath}/{file}",
                                 classes="delete",
                             ),
-                            id=file,
+                            id=f"{dirpath}-{file}",
                         )
                         for file in filenames
                     ],
-                    id=dirpath,
+                    id=f"collaps-{dirpath}",
                     initial_index=None,
                 )
 
@@ -60,11 +60,11 @@ class EnvFileSelector(VerticalScroll):
 
     @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):
-        self.app.file_to_show = event.list_view.highlighted_child.id
+        self.app.file_to_show = event.list_view.highlighted_child.id.split("-")[1]
 
         # only collapsible lists have ID
         if event.list_view.id:
-            folder = Path(event.list_view.id)
+            folder = Path(event.list_view.id.split("-")[1])
             self.app.file_to_show_path = (
                 ENV_FILE_DIR_PATH / folder / self.app.file_to_show
             )

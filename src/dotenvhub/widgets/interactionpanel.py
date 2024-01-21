@@ -104,7 +104,7 @@ class InteractionPanel(Container):
         text_widget = self.app.query_one(TextArea)
         self.app.current_content = text_widget.text
         text_widget.disabled = True
-
+        self.query_one("#btn-new-file").disabled = False
         event.button.disabled = True
 
         if self.app.file_to_show:

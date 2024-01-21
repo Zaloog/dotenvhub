@@ -1,14 +1,9 @@
 # DotEnvHub Tasks
 
 ## .Env-Preview Area Container
-- Title
 
 ## .Env Selector Container
-- VerticalScroll: Container
-  - ListView
-    - Env Files: not belonging to any group
-    - Collapsible: Group of Env Files
-      - Env Files
+- Navigation j,k?
 ## Exporter Interaction Container
 - Three Buttons
   - Bt1: Copy path of .env file to clipboard
