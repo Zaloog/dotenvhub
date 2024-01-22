@@ -76,9 +76,11 @@ jobs:
       - name: Retrieve pre-built distribution files
         uses: actions/download-artifact@v3
         with: {name: python-distribution-files, path: dist/}
-      - name: Install xclip on Ubuntu
+      - name: Install xclip and xsel on Ubuntu
         if: matrix.platform == 'ubuntu-latest'
-        run: sudo apt-get install xclip
+        run: |
+          sudo apt-get install xsel
+          sudo apt-get install xclip
       - name: Run tests
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
