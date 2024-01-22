@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from textual import log, on
+from textual import on
 from textual.containers import Container, Vertical
 from textual.widgets import Button, Input, Label, ListView, TextArea
 
@@ -56,8 +56,6 @@ class InteractionPanel(Container):
     @on(Button.Pressed, "#btn-copy-path")
     def copy_env_path(self):
         copy_path_to_clipboard(path=self.app.file_to_show_path)
-        log("copied file path to clipboard")
-        log(self.app.file_to_show_path)
 
     @on(Button.Pressed, "#btn-file-export")
     def export_env_file(self):

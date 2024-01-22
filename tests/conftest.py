@@ -7,4 +7,13 @@
     - https://docs.pytest.org/en/stable/writing_plugins.html
 """
 
-# import pytest
+import pytest
+
+
+@pytest.fixture
+def test_file_content():
+    return """
+USER=TESTUSER
+DB=TESTDB
+PORT=TESTPORT
+"""

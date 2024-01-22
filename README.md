@@ -14,14 +14,44 @@
 
 # dotenvhub
 
-> Add a short description here!
+> Your Terminal App to manage your .env files
 
-A longer description of your project goes here...
+# Introduction
+![header](https://raw.githubusercontent.com/Zaloog/dotenvhub/main/images/image_header.PNG)
+
+DotEnvHub helps accessing your project specific .env files from a central place to setup your environment.
+
+# Features
+- Organizes files centrally under `user_data_dir` following the [XDG] Basedir Spec
+- Saves your last selected shell automatically via a config file under `user_configdir`
+- Supports Creating/Editing/Deleting files in your dotenvhub
+- Currently provides 3 ways to set your environment variables:
+  1. Copy the shell specific command to set the environment variables into your clipboard
+  2. Create a Copy of the selected file into your current working directory
+  3. Copy the path of the selected file to be used with e.g. [python-dotenv] \
+  without creating a copy in the project
+
+# Installation
+You can install dotenvhub with:
+```bash
+python -m pip install dotenvhub
+```
+Or using [pipx]
+```bash
+pipx install dotenvhub
+```
+
+# Usage
+After Installation the Interface can be opened with:
+```bash
+dot
+```
+
+# Feedback and/or Issues
+If you have feedback or find bugs, feel free to open an Issue
 
 
-<!-- pyscaffold-notes -->
-
-## Note
-
-This project has been set up using PyScaffold 4.5. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+[XDG]: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+[platformdirs]: https://platformdirs.readthedocs.io/en/latest/
+[python-dotenv]: https://github.com/theskumar/python-dotenv
+[pipx]: https://github.com/pypa/pipx
