@@ -37,6 +37,3 @@ class DotEnvHub(App):
             file_interaction = InteractionPanel(id="interaction")
             file_interaction.border_title = "What do you want to do?"
             yield file_interaction
-
-
-myapp = DotEnvHub()

@@ -23,7 +23,7 @@ DotEnvHub helps accessing your project specific .env files from a central place 
 
 # Features
 - Organizes files centrally under `user_data_dir` following the [XDG] Basedir Spec
-- Saves your last selected shell automatically via a config file under `user_configdir`
+- Saves your last selected shell automatically via a config file under `user_config_dir`
 - Supports Creating/Editing/Deleting files in your dotenvhub
 - Currently provides 3 ways to set your environment variables:
   1. Copy the shell specific command to set the environment variables into your clipboard

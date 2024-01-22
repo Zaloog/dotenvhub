@@ -22,7 +22,7 @@ References:
 
 import sys
 
-from dotenvhub import cli_parser, config, constants, tui, utils
+from dotenvhub import cli_parser, constants, tui, utils
 
 __author__ = "Zaloog"
 __copyright__ = "Zaloog"
@@ -70,9 +70,9 @@ def main(args):
     """
     parsed_args = cli_parser.parse_args(args)
 
-    if not config.check_config_exists():
-        config.create_init_config()
-        return
+    # if not config.check_config_exists():
+    #     config.create_init_config()
+    #     return
 
     if not args:
         tui.DotEnvHub().run()

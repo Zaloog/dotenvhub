@@ -43,12 +43,15 @@ class DotEnvHubConfig:
 
     @property
     def shell(self) -> str:
-        return self._config["settings"]["Shell"]
+        return self.config["settings"]["Shell"]
 
     @shell.setter
     def shell(self, new_shell) -> str:
         self._config["settings"]["Shell"] = new_shell
         self.save()
 
+
+if not check_config_exists():
+    create_init_config()
 
 cfg = DotEnvHubConfig()
