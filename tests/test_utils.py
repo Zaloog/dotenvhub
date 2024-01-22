@@ -1,14 +1,18 @@
+import sys
+
 import pytest
 
 from dotenvhub import utils
 
 
+@pytest.mark.skipif(sys.platform == "linux", reason="does not run on ubuntu")
 def test_copy_path_to_clipboard():
     test_path = "test_folder/test_file"
     copied_path = utils.copy_path_to_clipboard(path=test_path)
     assert test_path == copied_path
 
 
+@pytest.mark.skipif(sys.platform == "linux", reason="does not run on ubuntu")
 @pytest.mark.parametrize(
     "shell, expected_shell_str ",
     [
