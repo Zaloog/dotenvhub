@@ -19,7 +19,7 @@
 # Introduction
 ![header](https://raw.githubusercontent.com/Zaloog/dotenvhub/main/images/image_header.PNG)
 
-DotEnvHub helps accessing your project specific .env files from a central place to setup your environment.
+DotEnvHub helps storing and accessing your project specific .env files from a central place to setup your environment variables.
 
 # Features
 - Organizes files centrally under `user_data_dir` following the [XDG] Basedir Spec
@@ -49,6 +49,17 @@ dot
 
 # Feedback and/or Issues
 If you have feedback or find bugs, feel free to open an Issue
+
+:warning: DotEnvHub uses `pyperclip` to handle copy/paste actions.
+Based on the pyperclips documentation, you might needs additional packages installed
+on linux systems like `xclip` or `xsel` which can be installed with:
+
+```bash
+sudo apt-get install xclip
+sudo apt-get install xsel
+```
+
+like mentioned [here](https://pyperclip.readthedocs.io/en/latest/)
 
 
 [XDG]: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
