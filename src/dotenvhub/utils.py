@@ -18,6 +18,7 @@ def update_file_tree(path: Path = ENV_FILE_DIR_PATH) -> dict:
 
 def copy_path_to_clipboard(path):
     pyperclip.copy(str(path))
+    return str(path)
 
 
 def get_env_content(filepath: Path):
@@ -36,6 +37,8 @@ def create_shell_export_str(shell, env_content):
     if shell == "cmd":
         return create_cmd_string(env_content=env_content)
     if shell == "bash":
+        return create_bash_string(env_content=env_content)
+    if shell == "zsh":
         return create_bash_string(env_content=env_content)
 
 

@@ -1,4 +1,3 @@
-import pyperclip
 import pytest
 
 from dotenvhub import utils
@@ -6,8 +5,8 @@ from dotenvhub import utils
 
 def test_copy_path_to_clipboard():
     test_path = "test_folder/test_file"
-    utils.copy_path_to_clipboard(path=test_path)
-    assert test_path == pyperclip.paste()
+    copied_path = utils.copy_path_to_clipboard(path=test_path)
+    assert test_path == copied_path
 
 
 @pytest.mark.parametrize(
@@ -20,7 +19,8 @@ def test_copy_path_to_clipboard():
     ],
 )
 def test_create_shell_export_str(shell, test_file_content, expected_shell_str):
-    utils.create_shell_export_str(shell=shell, env_content=test_file_content)
-    test_str = pyperclip.paste()
+    copied_str = utils.create_shell_export_str(
+        shell=shell, env_content=test_file_content
+    )
 
-    assert test_str == expected_shell_str
+    assert copied_str == expected_shell_str
