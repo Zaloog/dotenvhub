@@ -17,7 +17,7 @@ def test_copy_path_to_clipboard():
     "shell, expected_shell_str ",
     [
         ("cmd", 'set "USER=TESTUSER" & set "DB=TESTDB" & set "PORT=TESTPORT"'),
-        ("pwsh", '$env:USER="TESTUSER";$env:DB="TESTDB";$env:PORT="TESTPORT"'),
+        ("pwsh", '$env:USER="TESTUSER" ; $env:DB="TESTDB" ; $env:PORT="TESTPORT"'),
         ("bash", "export USER=TESTUSER ; export DB=TESTDB ; export PORT=TESTPORT"),
         ("zsh", "export USER=TESTUSER ; export DB=TESTDB ; export PORT=TESTPORT"),
     ],
