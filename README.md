@@ -26,7 +26,7 @@ DotEnvHub helps storing and accessing your project specific .env files from a ce
 - Saves your last selected shell automatically via a config file under `user_config_dir`
 - Supports Creating/Editing/Deleting files in your dotenvhub
 - Currently provides 3 ways to set your environment variables:
-  1. Copy the shell specific command to set the environment variables into your clipboard
+  1. Copy the Shell specific command to set the environment variables into your clipboard
   2. Create a Copy of the selected file into your current working directory
   3. Copy the path of the selected file to be used with e.g. [python-dotenv] \
   without creating a copy in the project
@@ -42,16 +42,32 @@ pipx install dotenvhub
 ```
 
 # Usage
+## Using the Graphical UI
+
 After Installation the Interface can be opened with:
 ```bash
 dot
 ```
 
+## Using the CLI
+The Creation of a Copy in the CWD and copying the Shell String
+to set the environment variables can also be done directly in the CLI:
+
+To create a copy of `FOLDER/FILE` from DotEnvHub and save it as `SAVENAME` in your CWD:
+```bash
+dot copy <FOLDER/FILE> -N <SAVENAME>
+```
+
+To copy the string to clipboard to set `FOLDER/FILE` from DotEnvHub in your `Shell` of Choice:
+```bash
+dot shell <FOLDER/FILE> -S <SHELL>
+```
+
 # Feedback and/or Issues
-If you have feedback or find bugs, feel free to open an Issue
+If you have feedback or find bugs, feel free to open an Issue.
 
 :warning: DotEnvHub uses `pyperclip` to handle copy/paste actions.
-Based on the pyperclips documentation, you might needs additional packages installed
+Based on the pyperclips documentation, you might need additional packages installed
 on linux systems like `xclip` or `xsel` which can be installed with:
 
 ```bash

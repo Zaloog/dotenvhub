@@ -36,22 +36,6 @@ __license__ = "MIT"
 # when using this Python module as a library.
 
 
-def fib(n):
-    """Fibonacci example function
-
-    Args:
-      n (int): integer
-
-    Returns:
-      int: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for _i in range(n - 1):
-        a, b = b, a + b
-    return a
-
-
 # ---- CLI ----
 # The functions defined in this section are wrappers around the main Python
 # API allowing them to be called directly from the terminal as a CLI
@@ -70,22 +54,25 @@ def main(args):
     """
     parsed_args = cli_parser.parse_args(args)
 
-    # if not config.check_config_exists():
-    #     config.create_init_config()
-    #     return
-
     if not args:
         tui.DotEnvHub().run()
 
-    if parsed_args.shell and parsed_args.filename:
+    if parsed_args.mode == "shell":
         content = utils.get_env_content(
             filepath=constants.ENV_FILE_DIR_PATH / parsed_args.filename
         )
 
-        utils.create_shell_export_str(shell=parsed_args.shell, env_content=content)
-        print(parsed_args)
-        print("Ins Clipboard geadded:")
-        print(content)
+        shell_str = utils.create_shell_export_str(
+            shell=parsed_args.shell, env_content=content
+        )
+
+        utils.console.print(f"Copied [blue]{shell_str}[/] to clipboard")
+
+    if parsed_args.mode == "copy":
+        utils.create_copy_in_cwd(
+            filepath=constants.ENV_FILE_DIR_PATH / parsed_args.filename,
+            filename=parsed_args.export_name,
+        )
 
 
 def run():

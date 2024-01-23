@@ -3,8 +3,11 @@ import shutil
 from pathlib import Path
 
 import pyperclip
+from rich.console import Console
 
 from .constants import ENV_FILE_DIR_PATH
+
+console = Console()
 
 
 def update_file_tree(path: Path = ENV_FILE_DIR_PATH) -> dict:
@@ -22,13 +25,20 @@ def copy_path_to_clipboard(path):
 
 
 def get_env_content(filepath: Path):
-    with open(filepath, "r") as env_file:
-        return "".join(env_file.readlines())
+    try:
+        with open(filepath, "r") as env_file:
+            return "".join(env_file.readlines())
+    except FileNotFoundError:
+        console.print("File [red]not found[/], make sure you entered a valid filename")
 
 
 def create_copy_in_cwd(filename: str, filepath: Path):
     cwd = Path.cwd()
-    shutil.copy(filepath, cwd / filename)
+    try:
+        shutil.copy(filepath, cwd / filename)
+        console.print(f"Created [blue]{filename}[/] in CWD")
+    except FileNotFoundError:
+        console.print("File [red]not found[/], make sure you entered a valid filename")
 
 
 def create_shell_export_str(shell, env_content):
@@ -45,7 +55,7 @@ def create_shell_export_str(shell, env_content):
 def create_pwsh_string(env_content: str):
     lines = [var.split("=") for var in env_content.split("\n") if var]
     key_val_list = [f'$env:{key.strip()}="{val.strip()}"' for key, val in lines]
-    pwsh_str = ";".join(key_val_list)
+    pwsh_str = " ; ".join(key_val_list)
     pyperclip.copy(pwsh_str)
     return pwsh_str
 
