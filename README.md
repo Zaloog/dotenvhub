@@ -20,6 +20,7 @@
 ![header](https://raw.githubusercontent.com/Zaloog/dotenvhub/main/images/image_header.PNG)
 
 DotEnvHub helps storing and accessing your project specific .env files from a central place to setup your environment variables.
+Supporting you to follow the [12-factor] principles when developing applications.
 
 # Features
 - Organizes files centrally under `user_data_dir` following the [XDG] Basedir Spec
@@ -82,3 +83,4 @@ like mentioned [here](https://pyperclip.readthedocs.io/en/latest/)
 [platformdirs]: https://platformdirs.readthedocs.io/en/latest/
 [python-dotenv]: https://github.com/theskumar/python-dotenv
 [pipx]: https://github.com/pypa/pipx
+[12-factor]: https://12factor.net
