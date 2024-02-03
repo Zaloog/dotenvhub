@@ -19,9 +19,10 @@ def update_file_tree(path: Path = ENV_FILE_DIR_PATH) -> dict:
     return file_tree_dict
 
 
-def copy_path_to_clipboard(path):
-    pyperclip.copy(str(path))
-    return str(path)
+def copy_path_to_clipboard(path: Path) -> str:
+    str_path = path.as_posix()
+    pyperclip.copy(str_path)
+    return str_path
 
 
 def get_env_content(filepath: Path):
