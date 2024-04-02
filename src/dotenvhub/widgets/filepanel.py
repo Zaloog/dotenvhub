@@ -35,11 +35,11 @@ class EnvFileSelector(VerticalScroll):
                         ListItem(
                             Label(f":page_facing_up: {file}"),
                             Button.warning(
-                                "Edit", id=f"btn-edit-{dirpath}/{file}", classes="edit"
+                                "Edit", id=f"btn-edit-{dirpath}-{file}", classes="edit"
                             ),
                             Button.error(
                                 "Delete",
-                                id=f"btn-del-{dirpath}/{file}",
+                                id=f"btn-del-{dirpath}-{file}",
                                 classes="delete",
                             ),
                             id=f"{dirpath}-{file}",
@@ -103,7 +103,7 @@ class EnvFileSelector(VerticalScroll):
 
     @on(Button.Pressed, ".delete")
     def delete_env_file(self, event: Button.Pressed):
-        folder_file_path = event.button.id[8:]
+        folder_file_path = event.button.id[8:].replace("-", "/")
 
         # Delete File
         (ENV_FILE_DIR_PATH / folder_file_path).unlink()
