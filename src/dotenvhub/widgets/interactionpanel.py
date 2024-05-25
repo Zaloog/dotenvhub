@@ -55,7 +55,8 @@ class InteractionPanel(Container):
     # Export Interactions
     @on(Button.Pressed, "#btn-copy-path")
     def copy_env_path(self):
-        copy_path_to_clipboard(path=self.app.file_to_show_path)
+        copy_str = copy_path_to_clipboard(path=self.app.file_to_show_path)
+        self.notify(title="Copied to Clipboard", message=f"Path: [green]{copy_str}[/]")
 
     @on(Button.Pressed, "#btn-file-export")
     def export_env_file(self):
@@ -63,11 +64,16 @@ class InteractionPanel(Container):
         create_copy_in_cwd(
             filename=export_filename, filepath=self.app.file_to_show_path
         )
+        self.notify(title="Env File Created", message=f"Created: {export_filename}")
 
     @on(Button.Pressed, "#btn-shell-export")
     def export_env_str_shell(self):
-        create_shell_export_str(
+        shell_str = create_shell_export_str(
             shell=self.app.current_shell, env_content=self.app.current_content
+        )
+        self.notify(
+            title="Copied to Clipboard",
+            message=f"Command: [green]{shell_str}[/]",
         )
 
     # Shell Select Interactions

@@ -43,6 +43,10 @@ class ModalShellSelector(ModalScreen):
         cfg.shell = self.app.current_shell
 
         self.app.query_one("#btn-shell-select").label = self.app.current_shell
+        self.notify(
+            title="Shell Selected",
+            message=f"Current active Shell: [green]{self.app.current_shell}[/]",
+        )
 
 
 class ModalSaveScreen(ModalScreen):

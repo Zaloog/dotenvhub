@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.0
+- Add Notifications when copying to clipboard and exporting .env file
+
 ## Version 0.1.3
 - Bump Textual Version requirement to 0.55.1
 - Fix Bad Identifier ID Naming
