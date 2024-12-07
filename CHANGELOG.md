@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.2
+- Fix CI bug, remove python version from version control
+
 ## Version 0.2.1
 - Move to uv
 - fix label bug on start
