@@ -80,7 +80,7 @@ class ModalSaveScreen(ModalScreen):
         self.app.query_one(TextArea).focus()
 
     @on(Button.Pressed, "#btn-modal-save")
-    def save_new_file(self) -> None:
+    async def save_new_file(self) -> None:
         self.dismiss()
 
         new_path = ENV_FILE_DIR_PATH / self.query_one(Input).value
@@ -88,7 +88,7 @@ class ModalSaveScreen(ModalScreen):
 
         self.app.file_tree = update_file_tree()
 
-        self.app.query_one(EnvFileSelector).remove()
+        await self.app.query_one(EnvFileSelector).remove()
         self.app.query_one("#app-grid").mount(
             EnvFileSelector(id="file-selector"), before="#file-preview"
         )
@@ -111,7 +111,8 @@ class ModalSaveScreen(ModalScreen):
         else:
             self.query_one("#btn-modal-save", Button).disabled = True
 
-        self.query_one("#lbl-new-file-name").remove()
-        self.mount(
-            Label(self.preview, id="lbl-new-file-name"), after="#inp-new-file-name"
-        )
+        self.query_one("#lbl-new-file-name", Label).update(self.preview)
+        # self.query_one("#lbl-new-file-name").remove()
+        # self.mount(
+        #     Label(self.preview, id="lbl-new-file-name"), after="#inp-new-file-name"
+        # )

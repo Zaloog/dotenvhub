@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.2.1
+- Move to uv
+- fix label bug on start
+
 ## Version 0.2.0
 - Add Notifications when copying to clipboard and exporting .env file
 

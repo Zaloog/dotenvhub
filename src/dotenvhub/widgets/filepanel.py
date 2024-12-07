@@ -102,7 +102,7 @@ class EnvFileSelector(VerticalScroll):
         text_widget.disabled = True
 
     @on(Button.Pressed, ".delete")
-    def delete_env_file(self, event: Button.Pressed):
+    async def delete_env_file(self, event: Button.Pressed):
         folder_file_path = event.button.id[8:].replace("-", "/")
 
         # Delete File
@@ -114,10 +114,7 @@ class EnvFileSelector(VerticalScroll):
             pass
 
         self.app.file_tree = update_file_tree()
-        self.app.query_one(EnvFileSelector).remove()
-        self.app.query_one("#app-grid").mount(
-            EnvFileSelector(id="file-selector"), before="#file-preview"
-        )
+        self.app.query_one(EnvFileSelector).refresh(recompose=True)
 
         # Clear Text Missing Border Title
         self.app.file_to_show = ""

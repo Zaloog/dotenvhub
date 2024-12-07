@@ -1,9 +1,50 @@
-[build-system]
-# AVOID CHANGING REQUIRES: IT WILL BE UPDATED BY PYSCAFFOLD!
-requires = ["setuptools>=46.1.0", "setuptools_scm[toml]>=5"]
-build-backend = "setuptools.build_meta"
+[project]
+name = "dotenvhub"
+version = "0.2.0"
+description = "Terminal App to manage .env files written in Python powered by Textual"
+readme = "README.md"
+authors = [
+    { name = "Zaloog", email = "gramslars@gmail.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "platformdirs>=4.3.6",
+    "pyperclip>=1.9.0",
+    "textual>=0.89.1",
+]
 
-[tool.setuptools_scm]
-# For smarter version schemes and other configuration options,
-# check out https://github.com/pypa/setuptools_scm
-version_scheme = "no-guess-dev"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+Repository = "https://github.com/Zaloog/dotenvhub"
+Changelog = "https://github.com/Zaloog/dotenvhub/blob/main/CHANGELOG.md"
+
+[project.scripts]
+dot = "dotenvhub.app:run"
+
+
+[tool.pytest.ini_options]
+addopts = "--cov src/dotenvhub --cov-report term-missing --verbose --color=yes"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0.1",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+]
