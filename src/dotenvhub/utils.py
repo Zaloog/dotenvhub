@@ -5,7 +5,7 @@ from pathlib import Path
 import pyperclip
 from rich.console import Console
 
-from .constants import ENV_FILE_DIR_PATH
+from dotenvhub.constants import ENV_FILE_DIR_PATH
 
 console = Console()
 

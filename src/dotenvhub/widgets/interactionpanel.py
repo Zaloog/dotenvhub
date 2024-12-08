@@ -1,22 +1,22 @@
 from pathlib import Path
 
 from textual import on
-from textual.containers import Container, Vertical
+from textual.containers import Container, Vertical, Horizontal
 from textual.widgets import Button, Input, Label, ListView, TextArea
 
-from ..utils import (
+from dotenvhub.utils import (
     copy_path_to_clipboard,
     create_copy_in_cwd,
     create_shell_export_str,
     write_to_file,
 )
-from .modals import ModalSaveScreen, ModalShellSelector
+from dotenvhub.widgets.modals import ModalSaveScreen, ModalShellSelector
 
 
 class InteractionPanel(Container):
     def compose(self):
         yield Button(
-            "Create Shell String",
+            "Create Shell\nString",
             id="btn-shell-export",
             disabled=True,
             variant="primary",
@@ -34,7 +34,7 @@ class InteractionPanel(Container):
             variant="primary",
         )
         with Vertical(id="interaction-shell-select"):
-            yield Label("Select your Shell")
+            yield Label("Select Shell")
             yield Button(
                 label=self.app.current_shell, id="btn-shell-select", variant="primary"
             )
@@ -45,12 +45,13 @@ class InteractionPanel(Container):
                 placeholder="env file name for export",
                 id="export-env-name",
             )
-        yield Button(
-            "New Env File", id="btn-new-file", disabled=False, variant="success"
-        )
-        yield Button(
-            "Save Env File", id="btn-save-file", disabled=True, variant="success"
-        )
+        with Horizontal(id="horizontal-save-new"):
+            yield Button(
+                "New Env File", id="btn-new-file", disabled=False, variant="success"
+            )
+            yield Button(
+                "Save Env File", id="btn-save-file", disabled=True, variant="success"
+            )
 
     # Export Interactions
     @on(Button.Pressed, "#btn-copy-path")

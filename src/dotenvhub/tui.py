@@ -5,11 +5,11 @@ from textual.containers import Container
 from textual.reactive import var
 from textual.widgets import Footer, Header
 
-from .config import cfg
-from .utils import update_file_tree
-from .widgets.filepanel import EnvFileSelector
-from .widgets.interactionpanel import InteractionPanel
-from .widgets.previewpanel import FilePreviewer
+from dotenvhub.config import cfg
+from dotenvhub.utils import update_file_tree
+from dotenvhub.widgets.filepanel import EnvFileSelector
+from dotenvhub.widgets.interactionpanel import InteractionPanel
+from dotenvhub.widgets.previewpanel import FilePreviewer
 
 
 class DotEnvHub(App):

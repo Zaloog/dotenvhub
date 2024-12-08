@@ -4,8 +4,8 @@ from textual import on
 from textual.containers import VerticalScroll
 from textual.widgets import Button, Collapsible, Label, ListItem, ListView, TextArea
 
-from ..constants import ENV_FILE_DIR_PATH
-from ..utils import get_env_content, update_file_tree
+from dotenvhub.constants import ENV_FILE_DIR_PATH
+from dotenvhub.utils import get_env_content, update_file_tree
 
 
 class EnvFileSelector(VerticalScroll):

@@ -2,8 +2,8 @@ import argparse
 
 from dotenvhub import __version__
 
-from .config import cfg
-from .constants import SHELLS
+from dotenvhub.config import cfg
+from dotenvhub.constants import SHELLS
 
 
 def parse_args(args):

@@ -5,8 +5,8 @@ ModalScreen{
 
 /* Modal for New File Selection */
 #modal-save-vert {
-    width: 20%;
-    height: 35%;
+    width: 40%;
+    height: auto;
     align:center middle;
     background: $panel;
     border:black thick;

@@ -1,6 +1,6 @@
 [project]
 name = "dotenvhub"
-version = "0.2.2"
+version = "0.2.3"
 description = "Terminal App to manage .env files written in Python powered by Textual"
 readme = "README.md"
 authors = [
@@ -47,4 +47,5 @@ dev = [
     "pre-commit>=4.0.1",
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
+    "textual-dev>=1.7.0",
 ]

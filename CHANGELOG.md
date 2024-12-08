@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.2.3
+- Fix CSS for modals and buttons
+- Small Text Adjustments
+
 ## Version 0.2.2
 - Fix CI bug, remove python version from version control
 

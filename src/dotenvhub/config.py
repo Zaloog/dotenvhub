@@ -1,6 +1,6 @@
 import configparser
 
-from .constants import (
+from dotenvhub.constants import (
     CONFIG_FILE_NAME,
     CONFIG_FILE_PATH,
     CONFIG_PATH,

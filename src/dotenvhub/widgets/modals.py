@@ -2,16 +2,17 @@ from pathlib import Path
 
 from textual import on
 from textual.app import ComposeResult
+from textual.binding import Binding
 from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.validation import Regex
 from textual.widgets import Button, Input, Label, TextArea
 
-from ..config import cfg
-from ..constants import ENV_FILE_DIR_PATH, SHELLS
-from ..utils import update_file_tree, write_to_file
-from .filepanel import EnvFileSelector
+from dotenvhub.config import cfg
+from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
+from dotenvhub.utils import update_file_tree, write_to_file
+from dotenvhub.widgets.filepanel import EnvFileSelector
 
 
 class ModalShellSelector(ModalScreen):
@@ -51,6 +52,7 @@ class ModalShellSelector(ModalScreen):
 
 class ModalSaveScreen(ModalScreen):
     CSS_PATH = Path("../assets/modal_save.css")
+    BINDINGS = [Binding(key="escape", action="close_window", show=False, priority=True)]
     preview = reactive(":page_facing_up: Enter File Name")
 
     def compose(self) -> ComposeResult:
@@ -64,7 +66,7 @@ class ModalSaveScreen(ModalScreen):
                 validate_on=["changed", "submitted"],
             ),
             Label(self.preview, id="lbl-new-file-name"),
-            Button("Save", id="btn-modal-save"),
+            Button("Save", id="btn-modal-save", disabled=True),
             Button("Cancel", id="btn-modal-cancel"),
             id="modal-save-vert",
         )
@@ -74,7 +76,7 @@ class ModalSaveScreen(ModalScreen):
         self.query_one("#btn-modal-save", Button).press()
 
     @on(Button.Pressed, "#btn-modal-cancel")
-    def close_window(self) -> None:
+    def action_close_window(self) -> None:
         self.dismiss()
         self.app.query_one(TextArea).disabled = False
         self.app.query_one(TextArea).focus()

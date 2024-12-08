@@ -33,14 +33,24 @@ Supporting you to follow the [12-factor] principles when developing applications
   without creating a copy in the project
 
 # Installation
-You can install dotenvhub with:
+You can install `dotenvhub` with one of the following options:
+
 ```bash
+# not recommended
 python -m pip install dotenvhub
 ```
-Or using [pipx]
 ```bash
 pipx install dotenvhub
 ```
+
+```bash
+rye install dotenvhub
+```
+
+```bash
+uv tool install dotenvhub
+```
+I recommend using [pipx], [rye] or [uv] to install CLI Tools into an isolated environment.
 
 # Usage
 ## Using the Graphical UI
@@ -85,3 +95,5 @@ like mentioned [here](https://pyperclip.readthedocs.io/en/latest/)
 [python-dotenv]: https://github.com/theskumar/python-dotenv
 [pipx]: https://github.com/pypa/pipx
 [12-factor]: https://12factor.net
+[rye]: https://rye.astral.sh
+[uv]: https://docs.astral.sh/uv
