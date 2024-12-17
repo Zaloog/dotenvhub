@@ -59,7 +59,7 @@ After Installation the Interface can be opened with:
 ```bash
 dot
 ```
-Use `Ctrl+c` to close the interface.
+Use `Ctrl+q` to close the interface.
 
 ## Using the CLI
 The Creation of a Copy in the CWD and copying the Shell String
