@@ -108,7 +108,7 @@ class ModalSaveScreen(ModalScreen):
 
         self.preview = preview_name
 
-        if self.query_one(Input).is_valid:
+        if event.input.is_valid and event.input.value:
             self.query_one("#btn-modal-save", Button).disabled = False
         else:
             self.query_one("#btn-modal-save", Button).disabled = True
