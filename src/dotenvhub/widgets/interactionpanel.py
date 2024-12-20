@@ -1,4 +1,8 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dotenvhub.tui import DotEnvHub
 
 from textual import on
 from textual.containers import Container, Vertical, Horizontal
@@ -14,6 +18,8 @@ from dotenvhub.widgets.modals import ModalSaveScreen, ModalShellSelector
 
 
 class InteractionPanel(Container):
+    app: "DotEnvHub"
+
     def compose(self):
         yield Button(
             "Create Shell\nString",
@@ -85,14 +91,10 @@ class InteractionPanel(Container):
     # Env File Interactions
     @on(Button.Pressed, "#btn-new-file")
     def new_file(self, event: Button.Pressed):
-        self.app.file_to_show = ""
-        self.app.file_to_show_path = ""
-        self.app.current_content = ""
+        self.app.reset_values()
 
-        text_widget = self.app.query_one(TextArea)
-        text_widget.text = ""
-        text_widget.disabled = False
-        text_widget.focus()
+        self.app.file_previewer.new_file()
+        self.app.file_previewer.focus()
 
         event.button.disabled = True
         self.query_one("#btn-save-file").disabled = False

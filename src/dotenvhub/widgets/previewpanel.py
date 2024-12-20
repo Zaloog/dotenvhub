@@ -1,4 +1,8 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dotenvhub.tui import DotEnvHub
 
 from dataclasses import dataclass
 
@@ -21,15 +25,19 @@ class FilePreviewer2(Horizontal):
 
 class KeyInput(Input):
     def __init__(self, key):
-        super().__init__(value=key, placeholder="Enter Key")
+        with self.prevent(Input.Changed):
+            super().__init__(value=key, placeholder="Enter Key")
 
 
 class ValueInput(Input):
     def __init__(self, value):
-        super().__init__(value=value, placeholder="Enter Value")
+        with self.prevent(Input.Changed):
+            super().__init__(value=value, placeholder="Enter Value")
 
 
 class KeyValPair(Horizontal):
+    app: "DotEnvHub"
+
     @dataclass
     class ValidMessage(Message):
         kv_pair: KeyValPair
@@ -40,6 +48,7 @@ class KeyValPair(Horizontal):
             return self.kv_pair
 
     valid: reactive[bool] = reactive(False)
+    in_use: reactive[bool] = reactive(False)
     key: reactive[str] = reactive("")
     value: reactive[str] = reactive("")
 
@@ -57,20 +66,18 @@ class KeyValPair(Horizontal):
     def check_if_valid(self):
         self.key = self.query_one(KeyInput).value
         self.value = self.query_one(ValueInput).value
-        self.notify(f"key {self.key}, value:{self.value}", timeout=1)
 
         self.valid = all((self.key != "", self.value != ""))
 
     def watch_valid(self):
-        self.notify(f"watch valid: {self.valid}", timeout=1)
         if self.valid:
             self.styles.border_left = ("vkey", "green")
             self.post_message(self.ValidMessage(kv_pair=self))
         else:
             self.styles.border_left = ("vkey", "red")
 
-    @on(Input.Submitted)
-    def go_to_next(self):
+    @on(KeyInput.Submitted)
+    def go_to_next(self, event: Input.Submitted):
         self.app.action_focus_next()
 
 
@@ -80,6 +87,19 @@ class FilePreviewer(VerticalScroll):
 
     def on_mount(self):
         self.mount(KeyValPair())
+
+    def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
+        for key, val in env_dict.items():
+            kv_pair = KeyValPair(key=key, value=val)
+            kv_pair.valid = True
+            self.mount(kv_pair)
+
+    def new_file(self):
+        self.clear()
+        self.mount(KeyValPair())
+
+    def clear(self):
+        self.remove_children()
 
     @on(KeyValPair.ValidMessage)
     def add_new_keyvalpair(self):

@@ -1,14 +1,20 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dotenvhub.tui import DotEnvHub
 
 from textual import on
 from textual.containers import VerticalScroll
-from textual.widgets import Button, Collapsible, Label, ListItem, ListView, TextArea
+from textual.widgets import Button, Collapsible, Label, ListItem, ListView
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
-from dotenvhub.utils import get_env_content, update_file_tree
+from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
 
 
 class EnvFileSelector(VerticalScroll):
+    app: "DotEnvHub"
+
     def compose(self):
         for dirpath, filenames in self.app.file_tree.items():
             if dirpath == ".":
@@ -95,11 +101,10 @@ class EnvFileSelector(VerticalScroll):
     @on(ListView.Selected)
     def update_preview_text(self):
         self.app.current_content = get_env_content(filepath=self.app.file_to_show_path)
+        self.app.content_dict = env_content_to_dict(content=self.app.current_content)
 
-        text_widget = self.app.query_one(TextArea)
-        text_widget.text = self.app.current_content
-        text_widget.action_cursor_page_down()
-        text_widget.disabled = True
+        self.app.file_previewer.clear()
+        self.app.file_previewer.load_values_from_dict(env_dict=self.app.content_dict)
 
     @on(Button.Pressed, ".delete")
     async def delete_env_file(self, event: Button.Pressed):
@@ -117,15 +122,14 @@ class EnvFileSelector(VerticalScroll):
         self.app.query_one(EnvFileSelector).refresh(recompose=True)
 
         # Clear Text Missing Border Title
-        self.app.file_to_show = ""
-        self.app.file_to_show_path = ""
-        self.app.current_content = ""
+        self.app.reset_values()
 
-        text_widget = self.app.query_one(TextArea)
-        text_widget.text = ""
+        self.app.file_previewer.new_file()
 
     @on(Button.Pressed, ".edit")
     def edit_env_file(self):
-        text_widget = self.app.query_one(TextArea)
-        text_widget.disabled = False
-        text_widget.focus()
+        self.app.file_previewer.disabled = False
+        self.app.file_previewer.focus()
+        # text_widget = self.app.query_one(TextArea)
+        # text_widget.disabled = False
+        # text_widget.focus()
