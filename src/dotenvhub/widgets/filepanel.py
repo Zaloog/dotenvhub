@@ -99,11 +99,11 @@ class EnvFileSelector(VerticalScroll):
         self.app.query_one("#btn-save-file").disabled = True
 
     @on(ListView.Selected)
-    def update_preview_text(self):
+    async def update_preview_text(self):
         self.app.current_content = get_env_content(filepath=self.app.file_to_show_path)
         self.app.content_dict = env_content_to_dict(content=self.app.current_content)
 
-        self.app.file_previewer.clear()
+        await self.app.file_previewer.clear()
         self.app.file_previewer.load_values_from_dict(env_dict=self.app.content_dict)
 
     @on(Button.Pressed, ".delete")
@@ -124,12 +124,9 @@ class EnvFileSelector(VerticalScroll):
         # Clear Text Missing Border Title
         self.app.reset_values()
 
-        self.app.file_previewer.new_file()
+        await self.app.file_previewer.new_file()
 
     @on(Button.Pressed, ".edit")
     def edit_env_file(self):
         self.app.file_previewer.disabled = False
         self.app.file_previewer.focus()
-        # text_widget = self.app.query_one(TextArea)
-        # text_widget.disabled = False
-        # text_widget.focus()

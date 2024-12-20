@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 from textual import on
 from textual.containers import Container, Vertical, Horizontal
-from textual.widgets import Button, Input, Label, ListView, TextArea
+from textual.widgets import Button, Input, Label, ListView
 
 from dotenvhub.utils import (
     copy_path_to_clipboard,
@@ -90,11 +90,10 @@ class InteractionPanel(Container):
 
     # Env File Interactions
     @on(Button.Pressed, "#btn-new-file")
-    def new_file(self, event: Button.Pressed):
+    async def new_file(self, event: Button.Pressed):
         self.app.reset_values()
 
-        self.app.file_previewer.new_file()
-        self.app.file_previewer.focus()
+        await self.app.file_previewer.new_file()
 
         event.button.disabled = True
         self.query_one("#btn-save-file").disabled = False
@@ -107,9 +106,12 @@ class InteractionPanel(Container):
 
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
-        text_widget = self.app.query_one(TextArea)
-        self.app.current_content = text_widget.text
-        text_widget.disabled = True
+        # text_widget = self.app.query_one(TextArea)
+        # self.app.current_content = text_widget.text
+        # text_widget.disabled = True
+        self.app.file_previewer.update_content_dict()
+        self.app.notify(f"{self.app.content_dict}")
+        return
         self.query_one("#btn-new-file").disabled = False
         event.button.disabled = True
 

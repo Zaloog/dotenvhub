@@ -82,6 +82,8 @@ class KeyValPair(Horizontal):
 
 
 class FilePreviewer(VerticalScroll):
+    app: "DotEnvHub"
+
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
 
@@ -94,12 +96,24 @@ class FilePreviewer(VerticalScroll):
             kv_pair.valid = True
             self.mount(kv_pair)
 
-    def new_file(self):
-        self.clear()
-        self.mount(KeyValPair())
+    async def new_file(self):
+        await self.clear()
+        await self.mount(KeyValPair())
+        self.query_one(KeyValPair).query_one(Input).focus()
 
-    def clear(self):
-        self.remove_children()
+    async def clear(self):
+        await self.remove_children()
+
+    def update_content_dict(self):
+        self.app.content_dict = {}
+        for kv_pair in self.query(KeyValPair):
+            if not kv_pair.valid:
+                continue
+            key, val = kv_pair.key, kv_pair.value
+            if key in self.app.content_dict.keys():
+                self.styles.border_left = ("vkey", "red")
+                continue
+            self.app.content_dict[key] = val
 
     @on(KeyValPair.ValidMessage)
     def add_new_keyvalpair(self):
