@@ -16,7 +16,7 @@ from textual.widgets import Input, Label
 class KeyInput(Input):
     def __init__(self, key):
         with self.prevent(Input.Changed):
-            super().__init__(value=key, placeholder="Enter Key")
+            super().__init__(value=key, placeholder="Enter Variable")
 
 
 class ValueInput(Input):
@@ -34,7 +34,6 @@ class KeyValPair(Horizontal):
 
         @property
         def control(self) -> KeyValPair:
-            """Alias for self.input."""
             return self.kv_pair
 
     valid: reactive[bool] = reactive(False)
@@ -101,7 +100,7 @@ class FilePreviewer(VerticalScroll):
             key, val = kv_pair.key, kv_pair.value
             if key in self.app.content_dict.keys():
                 kv_pair.styles.border_left = ("vkey", "yellow")
-                kv_pair.query_one(KeyInput).border_title = "duplicate key"
+                kv_pair.query_one(KeyInput).border_title = "duplicate"
                 kv_pair.query_one(KeyInput).styles.border = ("tall", "yellow")
                 continue
             kv_pair.styles.border_left = ("vkey", "green")
