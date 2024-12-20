@@ -10,17 +10,7 @@ from textual import on
 from textual.message import Message
 from textual.reactive import reactive
 from textual.containers import Horizontal, VerticalScroll
-from textual.widgets import TextArea, Input, Label
-
-
-class FilePreviewer2(Horizontal):
-    def compose(self):
-        yield TextArea(id="text-preview")
-
-    @on(TextArea.Changed)
-    def disable_buttons(self):
-        save_button = self.app.query_one("#btn-save-file")
-        save_button.disabled = False
+from textual.widgets import Input, Label
 
 
 class KeyInput(Input):
@@ -101,15 +91,22 @@ class FilePreviewer(VerticalScroll):
     async def clear(self):
         await self.remove_children()
 
+    @on(Input.Changed)
     def update_content_dict(self):
         self.app.content_dict = {}
         for kv_pair in self.query(KeyValPair):
             if not kv_pair.valid:
+                kv_pair.styles.border_left = ("vkey", "red")
                 continue
             key, val = kv_pair.key, kv_pair.value
             if key in self.app.content_dict.keys():
                 kv_pair.styles.border_left = ("vkey", "yellow")
+                kv_pair.query_one(KeyInput).border_title = "duplicate key"
+                kv_pair.query_one(KeyInput).styles.border = ("tall", "yellow")
                 continue
+            kv_pair.styles.border_left = ("vkey", "green")
+            kv_pair.query_one(KeyInput).border_title = ""
+            kv_pair.query_one(KeyInput).styles.border = None
             self.app.content_dict[key] = val
 
     @on(KeyValPair.ValidMessage)
