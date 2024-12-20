@@ -64,11 +64,29 @@ CollapsibleTitle {
 /* ###############################################  */
 /* Env File Preview */
 #file-preview  {
-    width: auto;
+    width: 1fr;
     background: $panel;
     border: red;
     height: 100%;
     background: $boost;
+}
+KeyValPair {
+    height:auto;
+    width:1fr;
+
+    Label{
+        width:3;
+        content-align:center middle;
+        margin:1 0;
+    }
+    ValueInput {
+        height:auto;
+        width:4fr;
+    }
+    KeyInput {
+        height:auto;
+        width:4fr;
+    }
 }
 /* ###############################################  */
 /* Interaction General */

@@ -13,7 +13,7 @@ from dotenvhub.widgets.previewpanel import FilePreviewer
 
 
 class DotEnvHub(App):
-    CSS_PATH = Path("assets/tui.css")
+    CSS_PATH = Path("assets/tui.tcss")
 
     file_to_show = var("")
     file_to_show_path = var("")

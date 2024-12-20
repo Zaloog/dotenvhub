@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.3.0
+- Rework the Textarea for Inputs
+
 ## Version 0.2.3
 - Fix CSS for modals and buttons
 - Small Text Adjustments
