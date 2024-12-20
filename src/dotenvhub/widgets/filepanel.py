@@ -117,9 +117,6 @@ class EnvFileSelector(VerticalScroll):
             (ENV_FILE_DIR_PATH / folder_file_path).parent.rmdir()
         except OSError:
             pass
-            # self.notify(severity='warning',
-            #             title='Information',
-            #             message='Still files under this folder')
 
         self.app.file_tree = update_file_tree()
         self.app.query_one(EnvFileSelector).refresh(recompose=True)
@@ -127,7 +124,6 @@ class EnvFileSelector(VerticalScroll):
         # Clear Text Missing Border Title
         self.app.reset_values()
 
-        # await self.app.file_previewer.new_file()
         await self.app.file_previewer.clear()
         self.app.file_previewer.border_title = "Select file or Create a new one"
 
