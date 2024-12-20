@@ -11,7 +11,7 @@ from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.validation import Regex
-from textual.widgets import Button, Input, Label, TextArea
+from textual.widgets import Button, Input, Label
 
 from dotenvhub.config import cfg
 from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
@@ -20,7 +20,7 @@ from dotenvhub.widgets.filepanel import EnvFileSelector
 
 
 class ModalShellSelector(ModalScreen):
-    CSS_PATH = Path("../assets/modal_shell.css")
+    CSS_PATH = Path("../assets/modal_shell.tcss")
 
     def compose(self) -> ComposeResult:
         shell_buttons = [
@@ -83,8 +83,6 @@ class ModalSaveScreen(ModalScreen):
     @on(Button.Pressed, "#btn-modal-cancel")
     def action_close_window(self) -> None:
         self.dismiss()
-        self.app.query_one(TextArea).disabled = False
-        self.app.query_one(TextArea).focus()
 
     @on(Button.Pressed, "#btn-modal-save")
     def save_new_file(self) -> None:
@@ -119,7 +117,3 @@ class ModalSaveScreen(ModalScreen):
             self.query_one("#btn-modal-save", Button).disabled = True
 
         self.query_one("#lbl-new-file-name", Label).update(self.preview)
-        # self.query_one("#lbl-new-file-name").remove()
-        # self.mount(
-        #     Label(self.preview, id="lbl-new-file-name"), after="#inp-new-file-name"
-        # )
