@@ -87,9 +87,6 @@ class FilePreviewer(VerticalScroll):
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
 
-    def on_mount(self):
-        self.mount(KeyValPair())
-
     def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
         for key, val in env_dict.items():
             kv_pair = KeyValPair(key=key, value=val)
@@ -111,7 +108,7 @@ class FilePreviewer(VerticalScroll):
                 continue
             key, val = kv_pair.key, kv_pair.value
             if key in self.app.content_dict.keys():
-                self.styles.border_left = ("vkey", "red")
+                kv_pair.styles.border_left = ("vkey", "yellow")
                 continue
             self.app.content_dict[key] = val
 

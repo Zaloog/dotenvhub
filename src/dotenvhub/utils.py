@@ -28,7 +28,6 @@ def copy_path_to_clipboard(path: Path) -> str:
 def get_env_content(filepath: Path):
     try:
         with open(filepath, "r") as env_file:
-            # return "".join(env_file.readlines())
             return env_file.read()
     except FileNotFoundError:
         console.print("File [red]not found[/], make sure you entered a valid filename")
@@ -41,6 +40,10 @@ def env_content_to_dict(content: str) -> dict[str, str]:
         content_dict[key] = val
 
     return content_dict
+
+
+def env_dict_to_content(content_dict: dict[str, str]) -> str:
+    return "\n".join(["=".join([key, val]) for key, val in content_dict.items()])
 
 
 def create_copy_in_cwd(filename: str, filepath: Path):

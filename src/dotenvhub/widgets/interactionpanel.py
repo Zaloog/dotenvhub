@@ -106,12 +106,16 @@ class InteractionPanel(Container):
 
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
-        # text_widget = self.app.query_one(TextArea)
-        # self.app.current_content = text_widget.text
-        # text_widget.disabled = True
         self.app.file_previewer.update_content_dict()
         self.app.notify(f"{self.app.content_dict}")
-        return
+        if not self.app.content_dict:
+            self.notify(
+                severity="warning",
+                title="Warning",
+                message="No valid Values to save",
+            )
+            return
+
         self.query_one("#btn-new-file").disabled = False
         event.button.disabled = True
 
