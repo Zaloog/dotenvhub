@@ -1,7 +1,8 @@
 # Changelog
 
 ## Version 0.3.0
-- Rework the Textarea for Inputs
+- Rework the Textarea for Inputing Variables
+- Add duplicate notification
 
 ## Version 0.2.3
 - Fix CSS for modals and buttons

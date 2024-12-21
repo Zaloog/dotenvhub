@@ -56,3 +56,4 @@ class DotEnvHub(App):
         self.file_to_show_path = ""
         self.current_content = ""
         self.content_dict = {}
+        self.app.file_previewer.border_title = "Select file or Create a new one"

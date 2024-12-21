@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -6,10 +5,51 @@ if TYPE_CHECKING:
 
 from textual import on
 from textual.containers import VerticalScroll
-from textual.widgets import Button, Collapsible, Label, ListItem, ListView
+from textual.widgets import Button, Collapsible, Label, ListItem, ListView, Input
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
 from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
+
+
+class CustomListItem(ListItem):
+    def __init__(self, file_name: str, dir_name: str = ".", *args, **kwargs):
+        self.file_name = file_name
+        self.dir_name = dir_name
+        if self.dir_name == ".":
+            self.complete_path = ENV_FILE_DIR_PATH / self.file_name
+        else:
+            self.complete_path = ENV_FILE_DIR_PATH / self.dir_name / self.file_name
+        super().__init__(*args, **kwargs)
+
+    def compose(self):
+        yield Label(f":page_facing_up: {self.file_name}")
+        yield Button(
+            "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
+        )
+        yield Button(
+            "Delete", id=f"btn-del-{self.file_name}", classes="delete", variant="error"
+        )
+
+    @on(Button.Pressed, ".delete")
+    async def delete_env_file(self):
+        # Delete File
+        self.complete_path.unlink()
+        try:
+            # If Folder Empty delete Folder
+            self.complete_path.parent.rmdir()
+        except OSError:
+            pass
+
+        self.app.file_tree = update_file_tree()
+        self.app.query_one(EnvFileSelector).refresh(recompose=True)
+
+        # Clear Text Missing Border Title
+        self.app.reset_values()
+        await self.app.file_previewer.clear()
+
+    @on(Button.Pressed, ".edit")
+    def edit_env_file(self):
+        self.app.query_one(Input).focus()
 
 
 class EnvFileSelector(VerticalScroll):
@@ -20,16 +60,7 @@ class EnvFileSelector(VerticalScroll):
             if dirpath == ".":
                 general_list = ListView(
                     *[
-                        ListItem(
-                            Label(f":page_facing_up: {file}"),
-                            Button.warning(
-                                "Edit", id=f"btn-edit-{file}", classes="edit"
-                            ),
-                            Button.error(
-                                "Delete", id=f"btn-del-{file}", classes="delete"
-                            ),
-                            id=f"file-{file}",
-                        )
+                        CustomListItem(file_name=file, dir_name=dirpath)
                         for file in filenames
                     ],
                     initial_index=None,
@@ -38,18 +69,7 @@ class EnvFileSelector(VerticalScroll):
             else:
                 folder_list = ListView(
                     *[
-                        ListItem(
-                            Label(f":page_facing_up: {file}"),
-                            Button.warning(
-                                "Edit", id=f"btn-edit-{dirpath}-{file}", classes="edit"
-                            ),
-                            Button.error(
-                                "Delete",
-                                id=f"btn-del-{dirpath}-{file}",
-                                classes="delete",
-                            ),
-                            id=f"{dirpath}-{file}",
-                        )
+                        CustomListItem(file_name=file, dir_name=dirpath)
                         for file in filenames
                     ],
                     id=f"collaps-{dirpath}",
@@ -65,23 +85,25 @@ class EnvFileSelector(VerticalScroll):
                 yield folder_colabs
 
     @on(ListView.Selected)
+    def delete_env_file(self, event: ListView.Selected):
+        event.list_view.highlighted_child.delete_env_file()
+
+    @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):
-        self.app.file_to_show = event.list_view.highlighted_child.id.split("-")[1]
+        selected_item = event.list_view.highlighted_child
+        self.app.file_to_show = selected_item.file_name
+        self.app.file_to_show_path = selected_item.complete_path
+
         self.query(Button).remove_class("active")
-        event.list_view.highlighted_child.query(Button).add_class("active")
+        selected_item.query(Button).add_class("active")
 
         # only collapsible lists have ID
         if event.list_view.id:
-            folder = Path(event.list_view.id.split("-")[1])
-            self.app.file_to_show_path = (
-                ENV_FILE_DIR_PATH / folder / self.app.file_to_show
+            self.app.file_previewer.border_title = (
+                f"{selected_item.dir_name}/{self.app.file_to_show}"
             )
-            self.app.query_one(
-                "#file-preview"
-            ).border_title = f"{folder} / {self.app.file_to_show}"
         else:
-            self.app.file_to_show_path = ENV_FILE_DIR_PATH / self.app.file_to_show
-            self.app.query_one("#file-preview").border_title = self.app.file_to_show
+            self.app.file_previewer.border_title = self.app.file_to_show
 
     @on(ListView.Selected)
     def reset_highlights(self, event: ListView.Selected):
@@ -105,29 +127,3 @@ class EnvFileSelector(VerticalScroll):
 
         await self.app.file_previewer.clear()
         self.app.file_previewer.load_values_from_dict(env_dict=self.app.content_dict)
-
-    @on(Button.Pressed, ".delete")
-    async def delete_env_file(self, event: Button.Pressed):
-        folder_file_path = event.button.id[8:].replace("-", "/")
-
-        # Delete File
-        (ENV_FILE_DIR_PATH / folder_file_path).unlink()
-        try:
-            # If Folder Empty delete Folder
-            (ENV_FILE_DIR_PATH / folder_file_path).parent.rmdir()
-        except OSError:
-            pass
-
-        self.app.file_tree = update_file_tree()
-        self.app.query_one(EnvFileSelector).refresh(recompose=True)
-
-        # Clear Text Missing Border Title
-        self.app.reset_values()
-
-        await self.app.file_previewer.clear()
-        self.app.file_previewer.border_title = "Select file or Create a new one"
-
-    @on(Button.Pressed, ".edit")
-    def edit_env_file(self):
-        self.app.file_previewer.disabled = False
-        self.app.file_previewer.focus()
