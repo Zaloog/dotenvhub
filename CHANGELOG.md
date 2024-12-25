@@ -3,6 +3,7 @@
 ## Version 0.3.0
 - Rework the Textarea for Inputing Variables
 - Add duplicate notification
+- Fix Modal Save Screen start with Button disabled if Input is empty
 
 ## Version 0.2.3
 - Fix CSS for modals and buttons
