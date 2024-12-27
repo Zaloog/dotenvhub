@@ -11,6 +11,7 @@ def test_conf_path(tmp_path) -> str:
 
 @pytest.fixture
 def test_data_path(tmp_path) -> str:
+    (tmp_path / ENV_FILE_DIR_NAME).mkdir()
     return tmp_path / ENV_FILE_DIR_NAME
 
 

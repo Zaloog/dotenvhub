@@ -33,12 +33,16 @@ class DotEnvHub(App):
     def __init__(
         self, config_path: Path = CONFIG_FILE_PATH, data_path: Path = ENV_FILE_DIR_PATH
     ):
+        self.config_path = config_path
+        self.data_path = data_path
         super().__init__()
-        self.file_tree = update_file_tree(path=data_path)
+        # self.file_tree = update_file_tree(path=data_path)
         self.cfg = DotEnvHubConfig(path=config_path)
         self.current_shell = self.cfg.shell
 
     def compose(self) -> ComposeResult:
+        self.file_tree = update_file_tree(path=self.data_path)
+
         yield Header()
         yield Footer()
 
