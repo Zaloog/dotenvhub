@@ -1,24 +1,23 @@
 import configparser
 
 from dotenvhub.constants import (
-    CONFIG_FILE_NAME,
     CONFIG_FILE_PATH,
-    CONFIG_PATH,
-    DATA_PATH,
     ENV_FILE_DIR_PATH,
 )
 
 
-def create_init_config(conf_path=CONFIG_PATH, data_path=DATA_PATH):
+def create_init_config(conf_path=CONFIG_FILE_PATH, data_path=ENV_FILE_DIR_PATH):
+    if check_config_exists(path=conf_path):
+        return
+
     config = configparser.ConfigParser(default_section=None)
     config.optionxform = str
     config["settings"] = {"Shell": "bash"}
 
     if not ENV_FILE_DIR_PATH.exists():
-        data_path.mkdir(exist_ok=True)
         ENV_FILE_DIR_PATH.mkdir(exist_ok=True)
 
-    with open(conf_path / CONFIG_FILE_NAME, "w") as configfile:
+    with open(conf_path, "w") as configfile:
         config.write(configfile)
 
 
@@ -49,9 +48,3 @@ class DotEnvHubConfig:
     def shell(self, new_shell) -> str:
         self._config["settings"]["Shell"] = new_shell
         self.save()
-
-
-if not check_config_exists():
-    create_init_config()
-
-cfg = DotEnvHubConfig()

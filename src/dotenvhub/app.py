@@ -1,6 +1,15 @@
 import sys
 
-from dotenvhub import cli_parser, constants, tui, utils
+from dotenvhub.tui import DotEnvHub
+from dotenvhub.cli_parser import parse_args
+from dotenvhub.constants import ENV_FILE_DIR_PATH, CONFIG_FILE_PATH
+from dotenvhub.config import create_init_config
+from dotenvhub.utils import (
+    create_copy_in_cwd,
+    get_env_content,
+    create_shell_export_str,
+    console,
+)
 
 __author__ = "Zaloog"
 __copyright__ = "Zaloog"
@@ -8,25 +17,25 @@ __license__ = "MIT"
 
 
 def main(args):
-    parsed_args = cli_parser.parse_args(args)
+    create_init_config(conf_path=CONFIG_FILE_PATH, data_path=ENV_FILE_DIR_PATH)
+
+    parsed_args = parse_args(args)
 
     if not args:
-        tui.DotEnvHub().run()
+        DotEnvHub(config_path=CONFIG_FILE_PATH, data_path=ENV_FILE_DIR_PATH).run()
 
     if parsed_args.mode == "shell":
-        content = utils.get_env_content(
-            filepath=constants.ENV_FILE_DIR_PATH / parsed_args.filename
-        )
+        content = get_env_content(filepath=ENV_FILE_DIR_PATH / parsed_args.filename)
 
-        shell_str = utils.create_shell_export_str(
+        shell_str = create_shell_export_str(
             shell=parsed_args.shell, env_content=content
         )
 
-        utils.console.print(f"Copied [blue]{shell_str}[/] to clipboard")
+        console.print(f"Copied [blue]{shell_str}[/] to clipboard")
 
     if parsed_args.mode == "copy":
-        utils.create_copy_in_cwd(
-            filepath=constants.ENV_FILE_DIR_PATH / parsed_args.filename,
+        create_copy_in_cwd(
+            filepath=ENV_FILE_DIR_PATH / parsed_args.filename,
             filename=parsed_args.export_name,
         )
 

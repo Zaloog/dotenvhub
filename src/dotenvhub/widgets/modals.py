@@ -13,7 +13,6 @@ from textual.screen import ModalScreen
 from textual.validation import Regex
 from textual.widgets import Button, Input, Label
 
-from dotenvhub.config import cfg
 from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
 from dotenvhub.utils import update_file_tree, write_to_file, env_dict_to_content
 from dotenvhub.widgets.filepanel import EnvFileSelector
@@ -45,7 +44,7 @@ class ModalShellSelector(ModalScreen):
         self.dismiss()
         selected_shell = event.button.id
         self.app.current_shell = selected_shell
-        cfg.shell = self.app.current_shell
+        self.app.cfg.shell = self.app.current_shell
 
         self.app.query_one("#btn-shell-select").label = self.app.current_shell
         self.notify(

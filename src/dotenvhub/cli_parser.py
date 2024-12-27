@@ -2,27 +2,18 @@ import argparse
 
 from dotenvhub import __version__
 
-from dotenvhub.config import cfg
+from dotenvhub.config import DotEnvHubConfig
 from dotenvhub.constants import SHELLS
 
 
 def parse_args(args):
-    """Parse command line parameters
-
-    Args:
-      args (List[str]): command line parameters as list of strings
-          (for example  ``["--help"]``).
-
-    Returns:
-      :obj:`argparse.Namespace`: command line parameters namespace
-    """
-
+    cfg = DotEnvHubConfig()
     parser = argparse.ArgumentParser(description="DotEnvHub your .env file manager")
     subparsers = parser.add_subparsers(dest="mode")
     parser.add_argument(
         "--version",
         action="version",
-        version=f"kanban-python {__version__}",
+        version=f"dotenvhub {__version__}",
     )
     sub_exp = subparsers.add_parser("copy", help="Export target File to CWD")
     sub_exp.add_argument(
