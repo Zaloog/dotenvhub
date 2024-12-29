@@ -13,7 +13,7 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Input, Label
 
 
-class KeyInput(Input):
+class VariableInput(Input):
     def __init__(self, key):
         with self.prevent(Input.Changed):
             super().__init__(value=key, placeholder="Enter Variable")
@@ -37,7 +37,6 @@ class KeyValPair(Horizontal):
             return self.kv_pair
 
     valid: reactive[bool] = reactive(False)
-    in_use: reactive[bool] = reactive(False)
     key: reactive[str] = reactive("")
     value: reactive[str] = reactive("")
 
@@ -47,13 +46,13 @@ class KeyValPair(Horizontal):
         self.value = value
 
     def compose(self):
-        yield KeyInput(key=self.key)
+        yield VariableInput(key=self.key)
         yield Label("=")
         yield ValueInput(value=self.value)
 
     @on(Input.Changed)
     def check_if_valid(self):
-        self.key = self.query_one(KeyInput).value
+        self.key = self.query_one(VariableInput).value
         self.value = self.query_one(ValueInput).value
 
         self.valid = all((self.key != "", self.value != ""))
@@ -65,7 +64,7 @@ class KeyValPair(Horizontal):
         else:
             self.styles.border_left = ("vkey", "red")
 
-    @on(KeyInput.Submitted)
+    @on(VariableInput.Submitted)
     def go_to_next(self, event: Input.Submitted):
         self.app.action_focus_next()
 
@@ -77,11 +76,11 @@ class FilePreviewer(VerticalScroll):
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
 
-    def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
+    async def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
         for key, val in env_dict.items():
             kv_pair = KeyValPair(key=key, value=val)
             kv_pair.valid = True
-            self.mount(kv_pair)
+            await self.mount(kv_pair)
 
     async def new_file(self):
         await self.clear()
@@ -102,12 +101,12 @@ class FilePreviewer(VerticalScroll):
             key, val = kv_pair.key, kv_pair.value
             if key in self.app.content_dict.keys():
                 kv_pair.styles.border_left = ("vkey", "yellow")
-                kv_pair.query_one(KeyInput).border_title = "duplicate"
-                kv_pair.query_one(KeyInput).styles.border = ("tall", "yellow")
+                kv_pair.query_one(VariableInput).border_title = "duplicate"
+                kv_pair.query_one(VariableInput).styles.border = ("tall", "yellow")
                 continue
             kv_pair.styles.border_left = ("vkey", "green")
-            kv_pair.query_one(KeyInput).border_title = ""
-            kv_pair.query_one(KeyInput).styles.border = None
+            kv_pair.query_one(VariableInput).border_title = ""
+            kv_pair.query_one(VariableInput).styles.border = None
             self.app.content_dict[key] = val
 
     @on(KeyValPair.ValidMessage)

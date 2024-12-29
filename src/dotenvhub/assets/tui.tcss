@@ -84,7 +84,7 @@ KeyValPair {
         width:4fr;
         margin:0 1 0 0;
     }
-    KeyInput {
+    VariableInput {
         height:auto;
         width:4fr;
     }

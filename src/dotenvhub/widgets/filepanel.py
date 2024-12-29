@@ -9,6 +9,7 @@ from textual.widgets import Button, Collapsible, Label, ListItem, ListView, Inpu
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
 from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
+from dotenvhub.widgets.previewpanel import VariableInput
 
 
 class CustomListItem(ListItem):
@@ -84,10 +85,6 @@ class EnvFileSelector(VerticalScroll):
                 )
                 yield folder_colabs
 
-    # @on(ListView.Selected)
-    # def delete_env_file(self, event: ListView.Selected):
-    #     event.list_view.highlighted_child.delete_env_file()
-
     @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):
         selected_item = event.list_view.highlighted_child
@@ -126,4 +123,7 @@ class EnvFileSelector(VerticalScroll):
         self.app.content_dict = env_content_to_dict(content=self.app.current_content)
 
         await self.app.file_previewer.clear()
-        self.app.file_previewer.load_values_from_dict(env_dict=self.app.content_dict)
+        await self.app.file_previewer.load_values_from_dict(
+            env_dict=self.app.content_dict
+        )
+        self.app.file_previewer.query_one(VariableInput).focus()
