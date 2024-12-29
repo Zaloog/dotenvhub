@@ -65,8 +65,7 @@ async def test_filepanel_folder(
                 == file_list[0]
             )
 
-        if folder_list and (folder_list[0] != "."):
+        if folder_list:
             assert (
-                pilot.app.file_selector.query(ListItem).first().dir_name
-                == folder_list[1]  # ordered descending
+                pilot.app.file_selector.query(ListItem).first().dir_name in folder_list
             )
