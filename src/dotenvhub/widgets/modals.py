@@ -1,4 +1,8 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dotenvhub.tui import DotEnvHub
 
 from textual import on
 from textual.app import ComposeResult
@@ -7,16 +11,15 @@ from textual.containers import Vertical
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.validation import Regex
-from textual.widgets import Button, Input, Label, TextArea
+from textual.widgets import Button, Input, Label
 
-from dotenvhub.config import cfg
 from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
-from dotenvhub.utils import update_file_tree, write_to_file
+from dotenvhub.utils import update_file_tree, write_to_file, env_dict_to_content
 from dotenvhub.widgets.filepanel import EnvFileSelector
 
 
 class ModalShellSelector(ModalScreen):
-    CSS_PATH = Path("../assets/modal_shell.css")
+    CSS_PATH = Path("../assets/modal_shell.tcss")
 
     def compose(self) -> ComposeResult:
         shell_buttons = [
@@ -41,7 +44,7 @@ class ModalShellSelector(ModalScreen):
         self.dismiss()
         selected_shell = event.button.id
         self.app.current_shell = selected_shell
-        cfg.shell = self.app.current_shell
+        self.app.cfg.shell = self.app.current_shell
 
         self.app.query_one("#btn-shell-select").label = self.app.current_shell
         self.notify(
@@ -51,7 +54,8 @@ class ModalShellSelector(ModalScreen):
 
 
 class ModalSaveScreen(ModalScreen):
-    CSS_PATH = Path("../assets/modal_save.css")
+    app: "DotEnvHub"
+    CSS_PATH = Path("../assets/modal_save.tcss")
     BINDINGS = [Binding(key="escape", action="close_window", show=False, priority=True)]
     preview = reactive(":page_facing_up: Enter File Name")
 
@@ -78,22 +82,20 @@ class ModalSaveScreen(ModalScreen):
     @on(Button.Pressed, "#btn-modal-cancel")
     def action_close_window(self) -> None:
         self.dismiss()
-        self.app.query_one(TextArea).disabled = False
-        self.app.query_one(TextArea).focus()
 
     @on(Button.Pressed, "#btn-modal-save")
-    async def save_new_file(self) -> None:
+    def save_new_file(self) -> None:
         self.dismiss()
 
         new_path = ENV_FILE_DIR_PATH / self.query_one(Input).value
-        write_to_file(path=new_path, content=self.app.current_content)
+        write_to_file(
+            path=new_path,
+            content=env_dict_to_content(content_dict=self.app.content_dict),
+        )
 
         self.app.file_tree = update_file_tree()
 
-        await self.app.query_one(EnvFileSelector).remove()
-        self.app.query_one("#app-grid").mount(
-            EnvFileSelector(id="file-selector"), before="#file-preview"
-        )
+        self.app.query_one(EnvFileSelector).refresh(recompose=True)
 
     @on(Input.Changed, "#inp-new-file-name")
     def format_name(self, event: Input.Changed):
@@ -114,7 +116,3 @@ class ModalSaveScreen(ModalScreen):
             self.query_one("#btn-modal-save", Button).disabled = True
 
         self.query_one("#lbl-new-file-name", Label).update(self.preview)
-        # self.query_one("#lbl-new-file-name").remove()
-        # self.mount(
-        #     Label(self.preview, id="lbl-new-file-name"), after="#inp-new-file-name"
-        # )

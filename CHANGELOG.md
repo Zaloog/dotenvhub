@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.3.0
+- Rework the Textarea for Inputing Variables
+- Add `duplicate` and `file was edited` hint in preview panel
+- Fix Modal Save Screen start with Button disabled if Input is empty
+- Fix Save Button enabling/disabling when content was changed
+
 ## Version 0.2.3
 - Fix CSS for modals and buttons
 - Small Text Adjustments

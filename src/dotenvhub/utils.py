@@ -1,4 +1,5 @@
 import os
+from typing import Literal
 import shutil
 from pathlib import Path
 
@@ -25,12 +26,25 @@ def copy_path_to_clipboard(path: Path) -> str:
     return str_path
 
 
-def get_env_content(filepath: Path):
+def get_env_content(filepath: Path) -> str:
     try:
         with open(filepath, "r") as env_file:
-            return "".join(env_file.readlines())
+            return env_file.read()
     except FileNotFoundError:
         console.print("File [red]not found[/], make sure you entered a valid filename")
+
+
+def env_content_to_dict(content: str) -> dict[str, str]:
+    content_dict = {}
+    for line in content.splitlines():
+        key, val = line.split("=")
+        content_dict[key] = val
+
+    return content_dict
+
+
+def env_dict_to_content(content_dict: dict[str, str]) -> str:
+    return "\n".join(["=".join([key, val]) for key, val in content_dict.items()])
 
 
 def create_copy_in_cwd(filename: str, filepath: Path):
@@ -42,7 +56,9 @@ def create_copy_in_cwd(filename: str, filepath: Path):
         console.print("File [red]not found[/], make sure you entered a valid filename")
 
 
-def create_shell_export_str(shell, env_content):
+def create_shell_export_str(
+    shell: Literal["pwsh", "cmd", "bash", "zsh"], env_content: str
+) -> str:
     if shell == "pwsh":
         return create_pwsh_string(env_content=env_content)
     if shell == "cmd":
@@ -53,7 +69,7 @@ def create_shell_export_str(shell, env_content):
         return create_bash_string(env_content=env_content)
 
 
-def create_pwsh_string(env_content: str):
+def create_pwsh_string(env_content: str) -> str:
     lines = [var.split("=") for var in env_content.split("\n") if var]
     key_val_list = [f'$env:{key.strip()}="{val.strip()}"' for key, val in lines]
     pwsh_str = " ; ".join(key_val_list)
@@ -61,7 +77,7 @@ def create_pwsh_string(env_content: str):
     return pwsh_str
 
 
-def create_cmd_string(env_content: str):
+def create_cmd_string(env_content: str) -> str:
     lines = [var.split("=") for var in env_content.split("\n") if var]
     key_val_list = [f'set "{key.strip()}={val.strip()}"' for key, val in lines]
     cmd_str = " & ".join(key_val_list)
@@ -69,7 +85,7 @@ def create_cmd_string(env_content: str):
     return cmd_str
 
 
-def create_bash_string(env_content: str):
+def create_bash_string(env_content: str) -> str:
     lines = [var.split("=") for var in env_content.split("\n") if var]
     key_val_list = [f"export {key.strip()}={val.strip()}" for key, val in lines]
     bash_str = " ; ".join(key_val_list)
@@ -77,7 +93,7 @@ def create_bash_string(env_content: str):
     return bash_str
 
 
-def write_to_file(path: Path, content):
+def write_to_file(path: Path, content: str):
     path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(path, "w") as env_file:

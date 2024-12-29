@@ -1,19 +1,26 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from dotenvhub.tui import DotEnvHub
 
 from textual import on
 from textual.containers import Container, Vertical, Horizontal
-from textual.widgets import Button, Input, Label, ListView, TextArea
+from textual.widgets import Button, Input, Label, ListView
 
 from dotenvhub.utils import (
     copy_path_to_clipboard,
     create_copy_in_cwd,
     create_shell_export_str,
     write_to_file,
+    env_dict_to_content,
 )
 from dotenvhub.widgets.modals import ModalSaveScreen, ModalShellSelector
 
 
 class InteractionPanel(Container):
+    app: "DotEnvHub"
+
     def compose(self):
         yield Button(
             "Create Shell\nString",
@@ -84,15 +91,10 @@ class InteractionPanel(Container):
 
     # Env File Interactions
     @on(Button.Pressed, "#btn-new-file")
-    def new_file(self, event: Button.Pressed):
-        self.app.file_to_show = ""
-        self.app.file_to_show_path = ""
-        self.app.current_content = ""
+    async def new_file(self, event: Button.Pressed):
+        self.app.reset_values()
 
-        text_widget = self.app.query_one(TextArea)
-        text_widget.text = ""
-        text_widget.disabled = False
-        text_widget.focus()
+        await self.app.file_previewer.new_file()
 
         event.button.disabled = True
         self.query_one("#btn-save-file").disabled = False
@@ -105,12 +107,22 @@ class InteractionPanel(Container):
 
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
-        text_widget = self.app.query_one(TextArea)
-        self.app.current_content = text_widget.text
-        text_widget.disabled = True
-        self.query_one("#btn-new-file").disabled = False
-        event.button.disabled = True
+        self.app.file_previewer.update_content_dict()
+        self.app.file_previewer.has_changed = False
+        if not self.app.content_dict:
+            self.notify(
+                severity="warning",
+                title="Warning",
+                message="No valid Values to save",
+            )
+            return
 
+        self.query_one("#btn-new-file").disabled = False
+        # event.button.disabled = True
+
+        self.app.current_content = env_dict_to_content(
+            content_dict=self.app.content_dict
+        )
         if self.app.file_to_show:
             write_to_file(
                 path=Path(self.app.file_to_show_path), content=self.app.current_content
