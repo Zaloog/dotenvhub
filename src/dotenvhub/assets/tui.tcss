@@ -3,7 +3,7 @@
     layout: grid;
     grid-size: 2;  /* two columns */
     grid-columns: 1fr;
-    grid-rows: 1fr;
+    grid-rows: 55% 45%;
 }
 
 /* ###############################################  */
@@ -67,7 +67,7 @@ CollapsibleTitle {
     width: 1fr;
     background: $panel;
     border: red;
-    height: 100%;
+    height: 1fr;
     background: $boost;
 }
 KeyValPair {
@@ -92,7 +92,7 @@ KeyValPair {
 /* ###############################################  */
 /* Interaction General */
 #interaction {
-    height: 100%;
+    height: 1fr;
     layout: grid;
     grid-size: 3;
     grid-columns: 1fr;
@@ -133,6 +133,7 @@ KeyValPair {
 /* Interaction Export Name */
 #interaction-export-name {
     width: 1fr;
+    height:auto;
     column-span: 2;
     margin: 0 1 0 1 ;
 }
@@ -154,7 +155,7 @@ KeyValPair {
     margin: 1 0 0 0;
 }
 #horizontal-save-new > Button {
-    height: 1fr;
+    height: 3;
     width: 1fr;
     margin: 0 1;
 }

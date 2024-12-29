@@ -23,15 +23,15 @@ class CustomListItem(ListItem):
 
     def compose(self):
         yield Label(f":page_facing_up: {self.file_name}")
-        yield Button(
-            "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
-        )
+        # yield Button(
+        #     "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
+        # )
         yield Button(
             "Delete", id=f"btn-del-{self.file_name}", classes="delete", variant="error"
         )
 
     @on(Button.Pressed, ".delete")
-    async def delete_env_file(self):
+    async def action_delete_env_file(self):
         # Delete File
         self.complete_path.unlink()
         try:
@@ -84,9 +84,9 @@ class EnvFileSelector(VerticalScroll):
                 )
                 yield folder_colabs
 
-    @on(ListView.Selected)
-    def delete_env_file(self, event: ListView.Selected):
-        event.list_view.highlighted_child.delete_env_file()
+    # @on(ListView.Selected)
+    # def delete_env_file(self, event: ListView.Selected):
+    #     event.list_view.highlighted_child.delete_env_file()
 
     @on(ListView.Selected)
     def get_preview_file_path(self, event: ListView.Selected):

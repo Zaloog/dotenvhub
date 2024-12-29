@@ -72,6 +72,7 @@ class KeyValPair(Horizontal):
 
 class FilePreviewer(VerticalScroll):
     app: "DotEnvHub"
+    has_changed: reactive[bool] = reactive(False, init=False)
 
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
@@ -93,6 +94,7 @@ class FilePreviewer(VerticalScroll):
     @on(Input.Changed)
     def update_content_dict(self):
         self.app.content_dict = {}
+        self.has_changed = True
         for kv_pair in self.query(KeyValPair):
             if not kv_pair.valid:
                 kv_pair.styles.border_left = ("vkey", "red")
@@ -112,3 +114,11 @@ class FilePreviewer(VerticalScroll):
     def add_new_keyvalpair(self):
         if self.query_children(KeyValPair)[-1].valid:
             self.mount(KeyValPair())
+
+    def watch_has_changed(self):
+        self.app.file_interaction.query_exactly_one(
+            "#btn-save-file"
+        ).disabled = not self.has_changed
+        self.app.file_previewer.border_subtitle = (
+            "[yellow on black]file was edited[/]" if self.has_changed else None
+        )

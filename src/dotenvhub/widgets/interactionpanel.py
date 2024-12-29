@@ -13,6 +13,7 @@ from dotenvhub.utils import (
     create_copy_in_cwd,
     create_shell_export_str,
     write_to_file,
+    env_dict_to_content,
 )
 from dotenvhub.widgets.modals import ModalSaveScreen, ModalShellSelector
 
@@ -107,7 +108,7 @@ class InteractionPanel(Container):
     @on(Button.Pressed, "#btn-save-file")
     def save_file(self, event: Button.Pressed):
         self.app.file_previewer.update_content_dict()
-        self.app.notify(f"{self.app.content_dict}")
+        self.app.file_previewer.has_changed = False
         if not self.app.content_dict:
             self.notify(
                 severity="warning",
@@ -117,8 +118,11 @@ class InteractionPanel(Container):
             return
 
         self.query_one("#btn-new-file").disabled = False
-        event.button.disabled = True
+        # event.button.disabled = True
 
+        self.app.current_content = env_dict_to_content(
+            content_dict=self.app.content_dict
+        )
         if self.app.file_to_show:
             write_to_file(
                 path=Path(self.app.file_to_show_path), content=self.app.current_content
