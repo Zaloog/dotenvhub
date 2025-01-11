@@ -20,20 +20,16 @@ from dotenvhub.widgets.filepanel import EnvFileSelector
 
 class ModalShellSelector(ModalScreen):
     CSS_PATH = Path("../assets/modal_shell.tcss")
+    BINDINGS = [
+        Binding(key="escape", action="app.pop_screen", show=False, priority=True)
+    ]
 
     def compose(self) -> ComposeResult:
-        shell_buttons = [
-            Button(label=shell, id=shell, variant="primary", classes="shell")
-            for shell in SHELLS
-        ]
-        # for btn in shell_buttons:
-        #     btn.can_focus = False
-        yield Vertical(
-            Label("Which Shell are you using?"),
-            *shell_buttons,
-            Button("Cancel", id="btn-modal-cancel"),
-            id="modal-shell-vert",
-        )
+        with Vertical(id="modal-shell-vert"):
+            yield Label("Which Shell are you using?")
+            for shell in SHELLS:
+                yield Button(label=shell, id=shell, variant="primary", classes="shell")
+            yield Button("Cancel", id="btn-modal-cancel")
 
     @on(Button.Pressed, "#btn-modal-cancel")
     def close_window(self) -> None:
