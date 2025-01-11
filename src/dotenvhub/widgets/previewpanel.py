@@ -72,6 +72,7 @@ class KeyValPair(Horizontal):
 class FilePreviewer(VerticalScroll):
     app: "DotEnvHub"
     has_changed: reactive[bool] = reactive(False, init=False)
+    can_focus = False
 
     def __init__(self, id: str | None = None):
         super().__init__(id=id)

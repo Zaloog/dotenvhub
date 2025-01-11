@@ -4,7 +4,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container
 from textual.reactive import var
-from textual.widgets import Footer, Header, Button
+from textual.widgets import Footer, Header, Button, ListView
 
 from dotenvhub.config import DotEnvHubConfig
 from dotenvhub.utils import update_file_tree
@@ -26,8 +26,9 @@ class DotEnvHub(App):
     current_shell = var("")
 
     BINDINGS = [
-        Binding(key="ctrl+n", action="new_file", description="New File"),
-        Binding(key="ctrl+s", action="save_file", description="Save"),
+        Binding(key="ctrl+n", action="new_file", description="New File", show=False),
+        Binding(key="ctrl+s", action="save_file", description="Save", show=False),
+        Binding(key="ctrl+z", action="change_shell", description="Save", show=False),
     ]
 
     def __init__(
@@ -36,7 +37,6 @@ class DotEnvHub(App):
         self.config_path = config_path
         self.data_path = data_path
         super().__init__()
-        # self.file_tree = update_file_tree(path=data_path)
         self.cfg = DotEnvHubConfig(path=config_path)
         self.current_shell = self.cfg.shell
 
@@ -59,11 +59,17 @@ class DotEnvHub(App):
             self.file_interaction.border_title = "What do you want to do?"
             yield self.file_interaction
 
+    def on_ready(self):
+        self.query_one(ListView).focus()
+
     def action_new_file(self):
         self.query_one("#btn-new-file", Button).press()
 
     def action_save_file(self):
         self.query_one("#btn-save-file", Button).press()
+
+    def action_change_shell(self):
+        self.query_one("#btn-shell-select", Button).press()
 
     def reset_values(self):
         self.file_to_show = ""

@@ -26,8 +26,8 @@ class ModalShellSelector(ModalScreen):
             Button(label=shell, id=shell, variant="primary", classes="shell")
             for shell in SHELLS
         ]
-        for btn in shell_buttons:
-            btn.can_focus = False
+        # for btn in shell_buttons:
+        #     btn.can_focus = False
         yield Vertical(
             Label("Which Shell are you using?"),
             *shell_buttons,
@@ -46,10 +46,13 @@ class ModalShellSelector(ModalScreen):
         self.app.current_shell = selected_shell
         self.app.cfg.shell = self.app.current_shell
 
-        self.app.query_one("#btn-shell-select").label = self.app.current_shell
+        self.app.query_one("#btn-shell-select").label = (
+            self.app.current_shell + " [black on yellow]^z[/]"
+        )
         self.notify(
             title="Shell Selected",
             message=f"Current active Shell: [green]{self.app.current_shell}[/]",
+            timeout=1.5,
         )
 
 

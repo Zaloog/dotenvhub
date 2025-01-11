@@ -43,7 +43,9 @@ class InteractionPanel(Container):
         with Vertical(id="interaction-shell-select"):
             yield Label("Select Shell")
             yield Button(
-                label=self.app.current_shell, id="btn-shell-select", variant="primary"
+                label=self.app.current_shell + " [black on yellow]^z[/]",
+                id="btn-shell-select",
+                variant="primary",
             )
         with Vertical(id="interaction-export-name"):
             yield Label("Export filename")
@@ -54,10 +56,16 @@ class InteractionPanel(Container):
             )
         with Horizontal(id="horizontal-save-new"):
             yield Button(
-                "New Env File", id="btn-new-file", disabled=False, variant="success"
+                "New Env File [black on yellow]^n[/]",
+                id="btn-new-file",
+                disabled=False,
+                variant="success",
             )
             yield Button(
-                "Save Env File", id="btn-save-file", disabled=True, variant="success"
+                "Save Env File [black on yellow]^s[/]",
+                id="btn-save-file",
+                disabled=True,
+                variant="success",
             )
 
     # Export Interactions

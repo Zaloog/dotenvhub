@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.4.0
+- Add better navigation in File Selector
+- Show Shortcuts in Buttons
+- Make Shell Modal closeable with `escape`
+
 ## Version 0.3.0
 - Rework the Textarea for Inputing Variables
 - Add `duplicate` and `file was edited` hint in preview panel

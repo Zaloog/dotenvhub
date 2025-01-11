@@ -4,12 +4,12 @@ if TYPE_CHECKING:
     from dotenvhub.tui import DotEnvHub
 
 from textual import on
+from textual.binding import Binding
 from textual.containers import VerticalScroll
-from textual.widgets import Button, Collapsible, Label, ListItem, ListView, Input
+from textual.widgets import Button, Collapsible, Label, ListItem, ListView
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
 from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
-from dotenvhub.widgets.previewpanel import VariableInput
 
 
 class CustomListItem(ListItem):
@@ -48,18 +48,76 @@ class CustomListItem(ListItem):
         self.app.reset_values()
         await self.app.file_previewer.clear()
 
-    @on(Button.Pressed, ".edit")
-    def edit_env_file(self):
-        self.app.query_one(Input).focus()
+    # @on(Button.Pressed, ".edit")
+    # def edit_env_file(self):
+    #     self.app.query_one(Input).focus()
+
+
+class CustomListView(ListView):
+    app: "DotEnvHub"
+    BINDINGS = [
+        Binding(
+            key="k,up", action="new_cursor_up", description="Up", key_display="↑/k"
+        ),
+        Binding(
+            key="j,down",
+            action="new_cursor_down",
+            description="Down",
+            key_display="↓/j",
+        ),
+    ]
+
+    def on_focus(self):
+        self.index = 0
+
+    def action_new_cursor_up(self):
+        if self.index != 0:
+            self.action_cursor_up()
+        else:
+            self.app.action_focus_previous()
+            self.index = None
+
+    def action_new_cursor_down(self):
+        if self.index != (len(self.children) - 1):
+            self.action_cursor_down()
+        else:
+            self.app.action_focus_next()
+            self.index = None
+
+
+class CustomCollapsible(Collapsible):
+    app: "DotEnvHub"
+    BINDINGS = [
+        Binding("enter,space", "toggle_show", description="Toggle", show=False),
+        Binding(
+            key="k,up", action="new_cursor_up", description="Up", key_display="↑/k"
+        ),
+        Binding(
+            key="j,down",
+            action="new_cursor_down",
+            description="Down",
+            key_display="↓/j",
+        ),
+    ]
+
+    def action_toggle_show(self):
+        self.collapsed = not self.collapsed
+
+    def action_new_cursor_up(self):
+        self.app.action_focus_previous()
+
+    def action_new_cursor_down(self):
+        self.app.action_focus_next()
 
 
 class EnvFileSelector(VerticalScroll):
     app: "DotEnvHub"
+    can_focus = False
 
     def compose(self):
         for dirpath, filenames in self.app.file_tree.items():
             if dirpath == ".":
-                general_list = ListView(
+                general_list = CustomListView(
                     *[
                         CustomListItem(file_name=file, dir_name=dirpath)
                         for file in filenames
@@ -68,7 +126,7 @@ class EnvFileSelector(VerticalScroll):
                 )
                 yield general_list
             else:
-                folder_list = ListView(
+                folder_list = CustomListView(
                     *[
                         CustomListItem(file_name=file, dir_name=dirpath)
                         for file in filenames
@@ -77,7 +135,7 @@ class EnvFileSelector(VerticalScroll):
                     initial_index=None,
                 )
 
-                folder_colabs = Collapsible(
+                folder_colabs = CustomCollapsible(
                     folder_list,
                     title=dirpath,
                     collapsed_symbol=":file_folder:",
@@ -126,4 +184,4 @@ class EnvFileSelector(VerticalScroll):
         await self.app.file_previewer.load_values_from_dict(
             env_dict=self.app.content_dict
         )
-        self.app.file_previewer.query_one(VariableInput).focus()
+        # self.app.file_previewer.query_one(VariableInput).focus()
