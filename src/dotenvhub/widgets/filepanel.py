@@ -181,7 +181,4 @@ class EnvFileSelector(VerticalScroll):
         self.app.content_dict = env_content_to_dict(content=self.app.current_content)
 
         await self.app.file_previewer.clear()
-        await self.app.file_previewer.load_values_from_dict(
-            env_dict=self.app.content_dict
-        )
-        # self.app.file_previewer.query_one(VariableInput).focus()
+        self.app.file_previewer.load_values_from_dict(env_dict=self.app.content_dict)

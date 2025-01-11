@@ -77,11 +77,11 @@ class FilePreviewer(VerticalScroll):
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
 
-    async def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
+    def load_values_from_dict(self, env_dict: dict[str, str] | None = None):
         for key, val in env_dict.items():
             kv_pair = KeyValPair(key=key, value=val)
             kv_pair.valid = True
-            await self.mount(kv_pair)
+            self.mount(kv_pair)
 
     async def new_file(self):
         await self.clear()
