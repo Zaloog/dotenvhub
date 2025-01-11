@@ -28,7 +28,16 @@ class DotEnvHub(App):
     BINDINGS = [
         Binding(key="ctrl+n", action="new_file", description="New File", show=False),
         Binding(key="ctrl+s", action="save_file", description="Save", show=False),
-        Binding(key="ctrl+z", action="change_shell", description="Save", show=False),
+        Binding(
+            key="ctrl+z", action="change_shell", description="Shell Change", show=False
+        ),
+        Binding(
+            key="ctrl+e", action="shell_export", description="Shell Export", show=False
+        ),
+        Binding(
+            key="ctrl+f", action="file_export", description="File Export", show=False
+        ),
+        Binding(key="ctrl+c", action="copy_path", description="Copy Path", show=False),
     ]
 
     def __init__(
@@ -70,6 +79,15 @@ class DotEnvHub(App):
 
     def action_change_shell(self):
         self.query_one("#btn-shell-select", Button).press()
+
+    def action_shell_export(self):
+        self.query_one("#btn-shell-export", Button).press()
+
+    def action_file_export(self):
+        self.query_one("#btn-file-export", Button).press()
+
+    def action_copy_path(self):
+        self.query_one("#btn-copy-path", Button).press()
 
     def reset_values(self):
         self.file_to_show = ""

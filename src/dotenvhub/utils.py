@@ -48,9 +48,8 @@ def env_dict_to_content(content_dict: dict[str, str]) -> str:
 
 
 def create_copy_in_cwd(filename: str, filepath: Path):
-    cwd = Path.cwd()
     try:
-        shutil.copy(filepath, cwd / filename)
+        shutil.copy(filepath, Path.cwd() / filename)
         console.print(f"Created [blue]{filename}[/] in CWD")
     except FileNotFoundError:
         console.print("File [red]not found[/], make sure you entered a valid filename")
@@ -97,4 +96,4 @@ def write_to_file(path: Path, content: str):
     path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(path, "w") as env_file:
-        env_file.write(content)
+        env_file.write(content + "\n")

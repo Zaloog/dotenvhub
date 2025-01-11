@@ -23,19 +23,19 @@ class InteractionPanel(Container):
 
     def compose(self):
         yield Button(
-            "Create Shell\nString",
+            "Create Shell String [black on yellow]^e[/]",
             id="btn-shell-export",
             disabled=True,
             variant="primary",
         )
         yield Button(
-            "Export File to current dir",
+            "Export File to current dir [black on yellow]^f[/]",
             id="btn-file-export",
             disabled=True,
             variant="primary",
         )
         yield Button(
-            "Copy Path to Clipboard",
+            "Copy Path to Clipboard [black on yellow]^c[/]",
             id="btn-copy-path",
             disabled=True,
             variant="primary",
