@@ -14,8 +14,6 @@ from textual.validation import Regex
 from textual.widgets import Button, Input, Label
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
-from dotenvhub.utils import update_file_tree, write_to_file, env_dict_to_content
-from dotenvhub.widgets.filepanel import EnvFileSelector
 
 
 class ModalShellSelector(ModalScreen):
@@ -84,17 +82,17 @@ class ModalSaveScreen(ModalScreen):
 
     @on(Button.Pressed, "#btn-modal-save")
     def save_new_file(self) -> None:
-        self.dismiss()
-
         new_path = ENV_FILE_DIR_PATH / self.query_one(Input).value
-        write_to_file(
-            path=new_path,
-            content=env_dict_to_content(content_dict=self.app.content_dict),
-        )
+        self.dismiss(result=new_path)
 
-        self.app.file_tree = update_file_tree()
-
-        self.app.query_one(EnvFileSelector).refresh(recompose=True)
+        # write_to_file(
+        #     path=new_path,
+        #     content=env_dict_to_content(content_dict=self.app.content_dict),
+        # )
+        #
+        # self.app.file_tree = update_file_tree()
+        #
+        # self.app.query_one(EnvFileSelector).refresh(recompose=True).focus()
 
     @on(Input.Changed, "#inp-new-file-name")
     def format_name(self, event: Input.Changed):

@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from textual.css.query import NoMatches
+
 if TYPE_CHECKING:
     from dotenvhub.tui import DotEnvHub
 
@@ -13,6 +15,8 @@ from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_di
 
 
 class CustomListItem(ListItem):
+    app: "DotEnvHub"
+
     def __init__(self, file_name: str, dir_name: str = ".", *args, **kwargs):
         self.file_name = file_name
         self.dir_name = dir_name
@@ -51,8 +55,12 @@ class CustomListItem(ListItem):
         self.app.query_one(EnvFileSelector).refresh(recompose=True)
 
         # Clear Text Missing Border Title
-        self.app.reset_values()
-        await self.app.file_previewer.clear()
+        await self.app.reset_values()
+        # await self.app.file_previewer.clear()
+        try:
+            self.app.query_one(ListView).focus()
+        except NoMatches:
+            pass
 
     @on(Button.Pressed, ".edit")
     def edit_env_file(self):
@@ -179,7 +187,7 @@ class EnvFileSelector(VerticalScroll):
         self.app.query_one("#btn-copy-path").disabled = False
 
         self.app.query_one("#btn-new-file").disabled = False
-        self.app.query_one("#btn-save-file").disabled = True
+        self.app.file_previewer.has_changed = False
 
     @on(ListView.Selected)
     async def update_preview_text(self):

@@ -147,9 +147,10 @@ class DotEnvHub(App):
                 timeout=1.5,
             )
 
-    def reset_values(self):
+    async def reset_values(self):
         self.file_to_show = ""
         self.file_to_show_path = ""
         self.current_content = ""
         self.content_dict = {}
-        self.app.file_previewer.border_title = "Select file or Create a new one"
+        await self.file_previewer.new_file()
+        self.file_previewer.border_title = "Select file or Create a new one"

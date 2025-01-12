@@ -2,6 +2,7 @@
 
 ## Version 0.5.0
 - Add `edit`-Button to focus Preview panel and `escape` binding to focus back to File Selector
+- Fix interface and preview after deleting and creating new files
 
 ## Version 0.4.0
 - Add better navigation in File Selector

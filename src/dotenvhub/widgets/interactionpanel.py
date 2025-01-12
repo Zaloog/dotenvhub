@@ -9,6 +9,7 @@ from textual.containers import Container, Vertical, Horizontal
 from textual.widgets import Button, Input, Label, ListView
 
 from dotenvhub.utils import (
+    update_file_tree,
     copy_path_to_clipboard,
     create_copy_in_cwd,
     create_shell_export_str,
@@ -100,9 +101,9 @@ class InteractionPanel(Container):
     # Env File Interactions
     @on(Button.Pressed, "#btn-new-file")
     async def new_file(self, event: Button.Pressed):
-        self.app.reset_values()
+        await self.app.reset_values()
 
-        await self.app.file_previewer.new_file()
+        # await self.app.file_previewer.new_file()
 
         event.button.disabled = True
         self.query_one("#btn-save-file").disabled = False
@@ -126,7 +127,6 @@ class InteractionPanel(Container):
             return
 
         self.query_one("#btn-new-file").disabled = False
-        # event.button.disabled = True
 
         self.app.current_content = env_dict_to_content(
             content_dict=self.app.content_dict
@@ -136,4 +136,18 @@ class InteractionPanel(Container):
                 path=Path(self.app.file_to_show_path), content=self.app.current_content
             )
         else:
-            self.app.push_screen(ModalSaveScreen())
+            self.app.push_screen(ModalSaveScreen(), callback=self.modal_select_new_file)
+
+    async def modal_select_new_file(self, new_path: Path | None):
+        if new_path is None:
+            return
+
+        write_to_file(
+            path=new_path,
+            content=env_dict_to_content(content_dict=self.app.content_dict),
+        )
+
+        self.app.file_tree = update_file_tree()
+
+        self.app.query_one("#file-selector").refresh(recompose=True)
+        await self.app.reset_values()

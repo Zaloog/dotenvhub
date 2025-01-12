@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from textual.binding import Binding
+from textual.css.query import NoMatches
 
 if TYPE_CHECKING:
     from dotenvhub.tui import DotEnvHub
@@ -12,7 +13,7 @@ from textual import on
 from textual.message import Message
 from textual.reactive import reactive
 from textual.containers import Horizontal, VerticalScroll
-from textual.widgets import Input, Label
+from textual.widgets import Input, Label, ListView
 
 
 class VariableInput(Input):
@@ -78,7 +79,10 @@ class FilePreviewer(VerticalScroll):
     BINDINGS = [Binding("escape", "focus_file_selector", show=False, priority=True)]
 
     def action_focus_file_selector(self):
-        self.app.query_one(".-highlight").parent.focus()
+        try:
+            self.app.query_one(".-highlight").parent.focus()
+        except NoMatches:
+            self.app.query_one(ListView).focus()
 
     def __init__(self, id: str | None = None):
         super().__init__(id=id)
