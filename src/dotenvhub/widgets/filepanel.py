@@ -25,10 +25,16 @@ class CustomListItem(ListItem):
     def compose(self):
         yield Label(f":page_facing_up: {self.file_name}")
         yield Button(
-            "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
+            "[white on black]e[/]dit",
+            id=f"btn-edit-{self.file_name}",
+            classes="edit",
+            variant="warning",
         )
         yield Button(
-            "Delete", id=f"btn-del-{self.file_name}", classes="delete", variant="error"
+            "[white on black]d[/]elete",
+            id=f"btn-del-{self.file_name}",
+            classes="delete",
+            variant="error",
         )
 
     @on(Button.Pressed, ".delete")
