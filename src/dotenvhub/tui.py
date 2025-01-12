@@ -3,6 +3,7 @@ from pathlib import Path
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container
+from textual.css.query import NoMatches
 from textual.reactive import var
 from textual.widgets import Footer, Header, Button, ListView
 
@@ -26,18 +27,52 @@ class DotEnvHub(App):
     current_shell = var("")
 
     BINDINGS = [
-        Binding(key="ctrl+n", action="new_file", description="New File", show=False),
-        Binding(key="ctrl+s", action="save_file", description="Save", show=False),
         Binding(
-            key="ctrl+z", action="change_shell", description="Shell Change", show=False
+            key="ctrl+n",
+            action="new_file",
+            description="New File",
+            show=False,
+            priority=True,
         ),
         Binding(
-            key="ctrl+e", action="shell_export", description="Shell Export", show=False
+            key="ctrl+s",
+            action="save_file",
+            description="Save",
+            show=False,
+            priority=True,
         ),
         Binding(
-            key="ctrl+f", action="file_export", description="File Export", show=False
+            key="ctrl+z",
+            action="change_shell",
+            description="Shell Change",
+            show=False,
+            priority=True,
         ),
-        Binding(key="ctrl+c", action="copy_path", description="Copy Path", show=False),
+        Binding(
+            key="ctrl+e",
+            action="shell_export",
+            description="Shell Export",
+            show=False,
+            priority=True,
+        ),
+        Binding(
+            key="ctrl+f",
+            action="file_export",
+            description="File Export",
+            show=False,
+            priority=True,
+        ),
+        Binding(
+            key="ctrl+c",
+            action="copy_path",
+            description="Copy Path",
+            show=False,
+            priority=True,
+        ),
+        Binding(
+            key="e", action="focus_preview", description="Focus Preview", show=False
+        ),
+        Binding(key="d", action="delete_file", description="File Delete", show=False),
     ]
 
     def __init__(
@@ -88,6 +123,29 @@ class DotEnvHub(App):
 
     def action_copy_path(self):
         self.query_one("#btn-copy-path", Button).press()
+
+    def action_focus_preview(self):
+        try:
+            # self.query_one(".active", Button).press()
+            self.query(".active").first(Button).press()
+        except NoMatches:
+            self.notify(
+                title="Edit Error",
+                message="Please select a file to [red]edit[/]",
+                severity="warning",
+                timeout=1.5,
+            )
+
+    def action_delete_file(self):
+        try:
+            self.query(".active").last(Button).press()
+        except NoMatches:
+            self.notify(
+                title="Delete Error",
+                message="Please select a file to [red]delete[/]",
+                severity="warning",
+                timeout=1.5,
+            )
 
     def reset_values(self):
         self.file_to_show = ""

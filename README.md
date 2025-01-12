@@ -10,7 +10,11 @@
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/dotenvhub)
 -->
 
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![PyPI-Server](https://img.shields.io/pypi/v/dotenvhub.svg)](https://pypi.org/project/dotenvhub/)
+[![Pyversions](https://img.shields.io/pypi/pyversions/dotenvhub.svg)](https://pypi.python.org/pypi/dotenvhub)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://static.pepy.tech/badge/dotenvhub)](https://pepy.tech/project/dotenvhub)
 
 # dotenvhub
 

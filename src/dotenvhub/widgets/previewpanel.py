@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from textual.binding import Binding
+
 if TYPE_CHECKING:
     from dotenvhub.tui import DotEnvHub
 
@@ -73,6 +75,10 @@ class FilePreviewer(VerticalScroll):
     app: "DotEnvHub"
     has_changed: reactive[bool] = reactive(False, init=False)
     can_focus = False
+    BINDINGS = [Binding("escape", "focus_file_selector", show=False, priority=True)]
+
+    def action_focus_file_selector(self):
+        self.app.query_one(".-highlight").parent.focus()
 
     def __init__(self, id: str | None = None):
         super().__init__(id=id)

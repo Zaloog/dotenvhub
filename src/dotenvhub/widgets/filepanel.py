@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 from textual import on
 from textual.binding import Binding
 from textual.containers import VerticalScroll
-from textual.widgets import Button, Collapsible, Label, ListItem, ListView
+from textual.widgets import Button, Collapsible, Label, ListItem, ListView, Input
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
 from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
@@ -24,9 +24,9 @@ class CustomListItem(ListItem):
 
     def compose(self):
         yield Label(f":page_facing_up: {self.file_name}")
-        # yield Button(
-        #     "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
-        # )
+        yield Button(
+            "Edit", id=f"btn-edit-{self.file_name}", classes="edit", variant="warning"
+        )
         yield Button(
             "Delete", id=f"btn-del-{self.file_name}", classes="delete", variant="error"
         )
@@ -48,9 +48,9 @@ class CustomListItem(ListItem):
         self.app.reset_values()
         await self.app.file_previewer.clear()
 
-    # @on(Button.Pressed, ".edit")
-    # def edit_env_file(self):
-    #     self.app.query_one(Input).focus()
+    @on(Button.Pressed, ".edit")
+    def edit_env_file(self):
+        self.app.query_one(Input).focus()
 
 
 class CustomListView(ListView):
