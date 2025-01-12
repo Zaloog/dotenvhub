@@ -104,7 +104,10 @@ class DotEnvHub(App):
             yield self.file_interaction
 
     def on_ready(self):
-        self.query_one(ListView).focus()
+        try:
+            self.query_one(ListView).focus()
+        except NoMatches:
+            self.query_one("#btn-new-file", Button).focus()
 
     def action_new_file(self):
         self.query_one("#btn-new-file", Button).press()

@@ -21,7 +21,7 @@
 > Your Terminal App to manage your .env files
 
 # Introduction
-![header](https://raw.githubusercontent.com/Zaloog/dotenvhub/main/images/image_header.PNG)
+![header](https://raw.githubusercontent.com/Zaloog/dotenvhub/main/images/demo.gif)
 
 DotEnvHub helps storing and accessing your project specific .env files from a central place to setup your environment variables.
 Supporting you to follow the [12-factor] principles when developing applications.
