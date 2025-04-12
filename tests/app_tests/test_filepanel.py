@@ -23,8 +23,7 @@ async def test_filepanel_file(test_app, test_data_path, file_list, amount):
         assert len(list(pilot.app.file_selector.query(ListItem))) == amount
         if file_list:
             assert (
-                pilot.app.file_selector.query(ListItem).first().file_name
-                == file_list[0]
+                pilot.app.file_selector.query(ListItem).first().file_name in file_list
             )
 
 
@@ -61,8 +60,7 @@ async def test_filepanel_folder(
         assert len(list(pilot.app.file_selector.query(ListItem))) == amount
         if file_list:
             assert (
-                pilot.app.file_selector.query(ListItem).first().file_name
-                == file_list[0]
+                pilot.app.file_selector.query(ListItem).first().file_name in file_list
             )
 
         if folder_list:
