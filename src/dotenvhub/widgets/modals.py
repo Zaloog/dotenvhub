@@ -13,6 +13,8 @@ from textual.screen import ModalScreen
 from textual.validation import Regex
 from textual.widgets import Button, Input, Label
 
+from rich.text import Text
+
 from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
 
 
@@ -54,7 +56,7 @@ class ModalSaveScreen(ModalScreen):
     app: "DotEnvHub"
     CSS_PATH = Path("../assets/modal_save.tcss")
     BINDINGS = [Binding(key="escape", action="close_window", show=False, priority=True)]
-    preview = reactive(":page_facing_up: Enter File Name")
+    preview = reactive(Text.from_markup(":page_facing_up: Enter File Name"))
 
     def compose(self) -> ComposeResult:
         yield Vertical(
@@ -98,12 +100,16 @@ class ModalSaveScreen(ModalScreen):
     def format_name(self, event: Input.Changed):
         text = event.input.value or event.input.placeholder
         if "/" not in text:
-            preview_name = f":page_facing_up: {text}"
+            preview_name = Text.from_markup(f":page_facing_up: {text}")
         elif len(text.split("/")) == 2:
             folder, file = [el.strip() for el in text.split("/")]
-            preview_name = f":file_folder: {folder} / :page_facing_up: {file}"
+            preview_name = Text.from_markup(
+                f":file_folder: {folder} / :page_facing_up: {file}"
+            )
         else:
-            preview_name = ":cross_mark: Enter a valid Folder/File Name"
+            preview_name = Text.from_markup(
+                ":cross_mark: Enter a valid Folder/File Name"
+            )
 
         self.preview = preview_name
 

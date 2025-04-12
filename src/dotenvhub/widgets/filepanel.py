@@ -9,6 +9,7 @@ from textual import on
 from textual.binding import Binding
 from textual.containers import VerticalScroll
 from textual.widgets import Button, Collapsible, Label, ListItem, ListView, Input
+from rich.text import Text
 
 from dotenvhub.constants import ENV_FILE_DIR_PATH
 from dotenvhub.utils import get_env_content, update_file_tree, env_content_to_dict
@@ -27,7 +28,7 @@ class CustomListItem(ListItem):
         super().__init__(*args, **kwargs)
 
     def compose(self):
-        yield Label(f":page_facing_up: {self.file_name}")
+        yield Label(Text.from_markup(f":page_facing_up: {self.file_name}"))
         yield Button(
             "[white on black]e[/]dit",
             id=f"btn-edit-{self.file_name}",
@@ -152,8 +153,8 @@ class EnvFileSelector(VerticalScroll):
                 folder_colabs = CustomCollapsible(
                     folder_list,
                     title=dirpath,
-                    collapsed_symbol=":file_folder:",
-                    expanded_symbol=":open_file_folder:",
+                    collapsed_symbol="📁",
+                    expanded_symbol="📂",
                 )
                 yield folder_colabs
 
