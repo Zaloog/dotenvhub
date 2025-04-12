@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.5.1
+- Fix Emoji display and change from string literals to `rich.Text.from_markup`
+
 ## Version 0.5.0
 - Add `edit`-Button to focus Preview panel and `escape` binding to focus back to File Selector
 - Fix interface and preview after deleting and creating new files
