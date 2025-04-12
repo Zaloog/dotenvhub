@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.5.2
+- Fix test case for linux
+
 ## Version 0.5.1
 - Fix Emoji display and change from string literals to `rich.Text.from_markup`
 
