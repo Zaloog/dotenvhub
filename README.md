@@ -1,15 +1,3 @@
-<!-- These are examples of badges you might want to add to your README:
-     please update the URLs accordingly
-
-[![Built Status](https://api.cirrus-ci.com/github/<USER>/dotenvhub.svg?branch=main)](https://cirrus-ci.com/github/<USER>/dotenvhub)
-[![ReadTheDocs](https://readthedocs.org/projects/dotenvhub/badge/?version=latest)](https://dotenvhub.readthedocs.io/en/stable/)
-[![Coveralls](https://img.shields.io/coveralls/github/<USER>/dotenvhub/main.svg)](https://coveralls.io/r/<USER>/dotenvhub)
-[![PyPI-Server](https://img.shields.io/pypi/v/dotenvhub.svg)](https://pypi.org/project/dotenvhub/)
-[![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/dotenvhub.svg)](https://anaconda.org/conda-forge/dotenvhub)
-[![Monthly Downloads](https://pepy.tech/badge/dotenvhub/month)](https://pepy.tech/project/dotenvhub)
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/dotenvhub)
--->
-
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![PyPI-Server](https://img.shields.io/pypi/v/dotenvhub.svg)](https://pypi.org/project/dotenvhub/)
 [![Pyversions](https://img.shields.io/pypi/pyversions/dotenvhub.svg)](https://pypi.python.org/pypi/dotenvhub)
@@ -30,6 +18,7 @@ Supporting you to follow the [12-factor] principles when developing applications
 - Organizes files centrally under `user_data_dir` following the [XDG] Basedir Spec
 - Saves your last selected shell automatically via a config file under `user_config_dir`
 - Supports Creating/Editing/Deleting files in your dotenvhub
+- Simple Navigation using [textual-jumper] to display a jump overlay
 - Currently provides 3 ways to set your environment variables:
   1. Copy the Shell specific command to set the environment variables into your clipboard
   2. Create a Copy of the selected file into your current working directory
@@ -48,13 +37,9 @@ pipx install dotenvhub
 ```
 
 ```bash
-rye install dotenvhub
-```
-
-```bash
 uv tool install dotenvhub
 ```
-I recommend using [pipx], [rye] or [uv] to install CLI Tools into an isolated environment.
+I recommend using [pipx] or [uv] to install CLI Tools into an isolated environment.
 
 # Usage
 ## Using the Graphical UI
@@ -99,5 +84,5 @@ like mentioned [here](https://pyperclip.readthedocs.io/en/latest/)
 [python-dotenv]: https://github.com/theskumar/python-dotenv
 [pipx]: https://github.com/pypa/pipx
 [12-factor]: https://12factor.net
-[rye]: https://rye.astral.sh
 [uv]: https://docs.astral.sh/uv
+[textual-jumper]: https://github.com/Zaloog/textual-jumper
