@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.0
+- Add textual-jumper for shortcuts
+
 ## Version 0.5.2
 - Fix test case for linux
 
