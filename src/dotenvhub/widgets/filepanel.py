@@ -29,18 +29,27 @@ class CustomListItem(ListItem):
 
     def compose(self):
         yield Label(Text.from_markup(f":page_facing_up: {self.file_name}"))
-        yield Button(
-            "[white on black]e[/]dit",
-            id=f"btn-edit-{self.file_name}",
+
+        # Replace dots and other invalid chars with underscores for IDs
+        safe_filename = self.file_name.replace(".", "_")
+
+        btn_edit = Button(
+            "edit",
+            id=f"btn-edit-{safe_filename}",
             classes="edit",
             variant="warning",
         )
-        yield Button(
-            "[white on black]d[/]elete",
-            id=f"btn-del-{self.file_name}",
+        btn_edit.jump_mode = "click"
+        yield btn_edit
+
+        btn_delete = Button(
+            "delete",
+            id=f"btn-del-{safe_filename}",
             classes="delete",
             variant="error",
         )
+        btn_delete.jump_mode = "click"
+        yield btn_delete
 
     @on(Button.Pressed, ".delete")
     async def action_delete_env_file(self):
@@ -114,6 +123,11 @@ class CustomCollapsible(Collapsible):
             key_display="↓/j",
         ),
     ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.jump_mode = "click"
+        self.can_focus = True
 
     def action_toggle_show(self):
         self.collapsed = not self.collapsed

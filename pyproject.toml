@@ -12,6 +12,7 @@ dependencies = [
     "platformdirs>=4.3.6",
     "pyperclip>=1.9.0",
     "textual>=0.89.1",
+    "textual-jumper>=0.2.0",
 ]
 
 classifiers = [

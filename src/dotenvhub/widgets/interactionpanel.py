@@ -23,31 +23,43 @@ class InteractionPanel(Container):
     app: "DotEnvHub"
 
     def compose(self):
-        yield Button(
-            "Create Shell String [black on yellow]^e[/]",
+        btn_shell_export = Button(
+            "Create Shell String",
             id="btn-shell-export",
             disabled=True,
             variant="primary",
         )
-        yield Button(
-            "Export File to current dir [black on yellow]^f[/]",
+        btn_shell_export.jump_mode = "click"
+        yield btn_shell_export
+
+        btn_file_export = Button(
+            "Export File to current dir",
             id="btn-file-export",
             disabled=True,
             variant="primary",
         )
-        yield Button(
-            "Copy Path to Clipboard [black on yellow]^c[/]",
+        btn_file_export.jump_mode = "click"
+        yield btn_file_export
+
+        btn_copy_path = Button(
+            "Copy Path to Clipboard",
             id="btn-copy-path",
             disabled=True,
             variant="primary",
         )
+        btn_copy_path.jump_mode = "click"
+        yield btn_copy_path
+
         with Vertical(id="interaction-shell-select"):
             yield Label("Select Shell")
-            yield Button(
-                label=self.app.current_shell + " [black on yellow]^z[/]",
+            btn_shell_select = Button(
+                label=self.app.current_shell,
                 id="btn-shell-select",
                 variant="primary",
             )
+            btn_shell_select.jump_mode = "click"
+            yield btn_shell_select
+
         with Vertical(id="interaction-export-name"):
             yield Label("Export filename")
             yield Input(
@@ -56,18 +68,23 @@ class InteractionPanel(Container):
                 id="export-env-name",
             )
         with Horizontal(id="horizontal-save-new"):
-            yield Button(
-                "New Env File [black on yellow]^n[/]",
+            btn_new_file = Button(
+                "New Env File",
                 id="btn-new-file",
                 disabled=False,
                 variant="success",
             )
-            yield Button(
-                "Save Env File [black on yellow]^s[/]",
+            btn_new_file.jump_mode = "click"
+            yield btn_new_file
+
+            btn_save_file = Button(
+                "Save Env File",
                 id="btn-save-file",
                 disabled=True,
                 variant="success",
             )
+            btn_save_file.jump_mode = "click"
+            yield btn_save_file
 
     # Export Interactions
     @on(Button.Pressed, "#btn-copy-path")
