@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.1
+- Fixed Button Label still showing old shortcut key
+
 ## Version 0.6.0
 - Add textual-jumper for shortcuts
 

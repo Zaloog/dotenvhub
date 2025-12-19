@@ -19,6 +19,7 @@ from dotenvhub.constants import ENV_FILE_DIR_PATH, SHELLS
 
 
 class ModalShellSelector(ModalScreen):
+    app: "DotEnvHub"
     CSS_PATH = Path("../assets/modal_shell.tcss")
     BINDINGS = [
         Binding(key="escape", action="app.pop_screen", show=False, priority=True)
@@ -42,9 +43,7 @@ class ModalShellSelector(ModalScreen):
         self.app.current_shell = selected_shell
         self.app.cfg.shell = self.app.current_shell
 
-        self.app.query_one("#btn-shell-select").label = (
-            self.app.current_shell + " [black on yellow]^z[/]"
-        )
+        self.app.query_one("#btn-shell-select", Button).label = self.app.current_shell
         self.notify(
             title="Shell Selected",
             message=f"Current active Shell: [green]{self.app.current_shell}[/]",

@@ -1,6 +1,6 @@
 [project]
 name = "dotenvhub"
-version = "0.6.0"
+version = "0.6.1"
 description = "Terminal App to manage .env files written in Python powered by Textual"
 readme = "README.md"
 authors = [
@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = [
     "platformdirs>=4.3.6",
     "pyperclip>=1.9.0",
-    "textual>=0.89.1",
+    "textual>=6.0.0",
     "textual-jumper>=0.2.0",
 ]
 
@@ -37,7 +37,7 @@ dot = "dotenvhub.app:run"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "file"
+asyncio_default_fixture_loop_scope = "function"
 addopts = "--cov src/dotenvhub --cov-report term-missing --verbose --color=yes"
 testpaths = ["tests"]
 
