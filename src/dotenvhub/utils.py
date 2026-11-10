@@ -34,10 +34,13 @@ def get_env_content(filepath: Path) -> str:
         console.print("File [red]not found[/], make sure you entered a valid filename")
 
 
-def env_content_to_dict(content: str) -> dict[str, str]:
+def env_content_to_dict(content: str | None) -> dict[str, str]:
     content_dict = {}
-    for line in content.splitlines():
-        key, val = line.split("=")
+    for line in (content or "").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, val = line.split("=", 1)
         content_dict[key] = val
 
     return content_dict

@@ -38,6 +38,26 @@ def test_env_content_to_dict(test_file_content):
     assert result == {"USER": "TESTUSER", "DB": "TESTDB", "PORT": "TESTPORT"}
 
 
+def test_env_content_to_dict_skips_comments_and_blank_lines():
+    content = "# a comment\n\nUSER=TESTUSER\n   \nDB=TESTDB\n"
+    result = env_content_to_dict(content=content)
+    assert result == {"USER": "TESTUSER", "DB": "TESTDB"}
+
+
+def test_env_content_to_dict_keeps_equals_in_value():
+    result = env_content_to_dict(content="KEY=a=b\n")
+    assert result == {"KEY": "a=b"}
+
+
+def test_env_content_to_dict_skips_lines_without_equals():
+    result = env_content_to_dict(content="JUSTAWORD\nUSER=X\n")
+    assert result == {"USER": "X"}
+
+
+def test_env_content_to_dict_tolerates_none():
+    assert env_content_to_dict(content=None) == {}
+
+
 def test_env_dict_to_content(test_dict):
     result = env_dict_to_content(content_dict=test_dict)
     assert result == """USER=TESTUSER\nDB=TESTDB\nPORT=TESTPORT"""
